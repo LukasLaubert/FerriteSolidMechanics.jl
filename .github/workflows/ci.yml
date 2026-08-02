@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  test:
+    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.threads }} thread(s)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - '1.10'
+          - '1'
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+        threads:
+          - '4'
+        include:
+          - version: '1'
+            os: ubuntu-latest
+            threads: '1'
+    env:
+      JULIA_NUM_THREADS: ${{ matrix.threads }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: ${{ matrix.version }}
+      - uses: julia-actions/cache@v2
+      - uses: julia-actions/julia-buildpkg@v1
+      - uses: julia-actions/julia-runtest@v1
+
+  materialmodelsbase-ext:
+    name: MaterialModelsBase extension - ubuntu-latest
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: '1'
+      - uses: julia-actions/cache@v2
+      - name: Build an environment with the unregistered packages
+        run: |
+          julia -e '
+            using Pkg
+            Pkg.activate("mmb-ci")
+            Pkg.develop(PackageSpec(path=pwd()))
+            Pkg.add(url="https://github.com/KnutAM/Newton.jl")
+            Pkg.add(url="https://github.com/KnutAM/MaterialModelsBase.jl")
+            Pkg.add(url="https://github.com/KnutAM/MechanicalMaterialModels.jl")
+            Pkg.add(["Test", "Ferrite", "Tensors"])'
+      - name: Run the adapter tests
+        run: julia --project=mmb-ci test/test_materialmodelsbase_adapter.jl

@@ -1,0 +1,15 @@
+**/_**
+
+**.txt
+**.vtu
+**.pvd
+*.out
+*.err
+
+.vscode/*
+scratch/*
+docs/build/
+examples/results/
+
+**/Manifest.toml
+LocalPreferences.toml

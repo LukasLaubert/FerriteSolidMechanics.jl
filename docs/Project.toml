@@ -1,0 +1,6 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+FerriteSolidMechanics = "1a89b914-1d6e-4cc5-bd84-8dafe889980d"
+
+[compat]
+Documenter = "1"

@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+title: "FerriteSolidMechanics.jl"
+abstract: >-
+  Reusable material model interfaces and a shared finite element assembly path
+  on top of Ferrite.jl. Application and research code writes the constitutive
+  model at the quadrature point (UMAT-like) level; the package owns DOF handling,
+  sparse assembly, threading, MPI reduction, and trial/commit state updating.
+type: software
+authors:
+  - given-names: Lukas
+    family-names: Laubert
+    email: Lukas.Laubert@fau.de
+    affiliation: "Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)"
+    orcid: "https://orcid.org/0009-0009-4524-2621"
+version: "0.1.0"
+license: MIT
+repository-code: "https://github.com/LukasLaubert/FerriteSolidMechanics.jl"
+url: "https://github.com/LukasLaubert/FerriteSolidMechanics.jl"
+keywords:
+  - Julia
+  - finite element method
+  - constitutive modeling
+  - material models
+  - Ferrite.jl
+  - continuum mechanics
+  - hyperelasticity
+  - viscoelasticity
+  - viscoplasticity
+date-released: 2026-08-02
