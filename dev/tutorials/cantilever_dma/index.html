@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>DMA cantilever beam · FerriteSolidMechanics.jl</title><meta name="title" content="DMA cantilever beam · FerriteSolidMechanics.jl"/><meta property="og:title" content="DMA cantilever beam · FerriteSolidMechanics.jl"/><meta property="twitter:title" content="DMA cantilever beam · FerriteSolidMechanics.jl"/><meta name="description" content="Documentation for FerriteSolidMechanics.jl."/><meta property="og:description" content="Documentation for FerriteSolidMechanics.jl."/><meta property="twitter:description" content="Documentation for FerriteSolidMechanics.jl."/><meta property="og:url" content="https://LukasLaubert.github.io/FerriteSolidMechanics.jl/tutorials/cantilever_dma/"/><meta property="twitter:url" content="https://LukasLaubert.github.io/FerriteSolidMechanics.jl/tutorials/cantilever_dma/"/><link rel="canonical" href="https://LukasLaubert.github.io/FerriteSolidMechanics.jl/tutorials/cantilever_dma/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">FerriteSolidMechanics.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox"/><label class="tocitem" for="menuitem-2"><span class="docs-label">Material models</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../models/">Overview</a></li><li><a class="tocitem" href="../../models/linear_elasticity/">Linear Elasticity</a></li><li><input class="collapse-toggle" id="menuitem-2-3" type="checkbox"/><label class="tocitem" for="menuitem-2-3"><span class="docs-label">Hyperelastic</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../models/neo_hooke/">Neo–Hookean</a></li><li><a class="tocitem" href="../../models/arruda_boyce/">Arruda–Boyce</a></li><li><a class="tocitem" href="../../models/mooney_rivlin/">Mooney–Rivlin</a></li><li><a class="tocitem" href="../../models/ogden/">Ogden</a></li></ul></li><li><a class="tocitem" href="../../models/j2_plasticity/">J2 Plasticity</a></li><li><a class="tocitem" href="../../models/vepd_detrez2010/">VEPD Detrez 2010</a></li><li><a class="tocitem" href="../../models/vevp_zhao2021/">VEVP Zhao 2021</a></li><li><a class="tocitem" href="../../models/vevp_moammm/">VEVP MOAMMM</a></li><li><a class="tocitem" href="../../experimental/">Experimental models</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox" checked/><label class="tocitem" for="menuitem-3"><span class="docs-label">Tutorials</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../plate_with_hole/">2D plate with a hole</a></li><li class="is-active"><a class="tocitem" href>DMA cantilever beam</a><ul class="internal"><li><a class="tocitem" href="#Problem-setup"><span>Problem setup</span></a></li><li><a class="tocitem" href="#Grid,-interpolation,-constraints"><span>Grid, interpolation, constraints</span></a></li><li><a class="tocitem" href="#Material"><span>Material</span></a></li><li><a class="tocitem" href="#Assembler"><span>Assembler</span></a></li><li><a class="tocitem" href="#Time-and-Newton-loop"><span>Time and Newton loop</span></a></li><li><a class="tocitem" href="#Postprocessing"><span>Postprocessing</span></a></li><li><a class="tocitem" href="#Swapping-the-material-model"><span>Swapping the material model</span></a></li><li><a class="tocitem" href="#Plain-program"><span>Plain program</span></a></li></ul></li><li><a class="tocitem" href="../adaptive_time_stepping/">Adaptive time stepping</a></li><li><a class="tocitem" href="../mpi_four_point_bending/">MPI four-point bending</a></li></ul></li><li><a class="tocitem" href="../../concepts/">Concepts</a></li><li><a class="tocitem" href="../../loads/">External loads</a></li><li><a class="tocitem" href="../../wrappers/">In-plane wrappers</a></li><li><a class="tocitem" href="../../performance/">Performance and parallel execution</a></li><li><a class="tocitem" href="../../developer_guide/">Developer guide</a></li><li><a class="tocitem" href="../../faq/">FAQ</a></li><li><a class="tocitem" href="../../api/">API reference</a></li><li><a class="tocitem" href="../../api_models/">Material model API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>DMA cantilever beam</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>DMA cantilever beam</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/LukasLaubert/FerriteSolidMechanics.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/LukasLaubert/FerriteSolidMechanics.jl/blob/master/docs/src/tutorials/cantilever_dma.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="DMA-cantilever-beam"><a class="docs-heading-anchor" href="#DMA-cantilever-beam">DMA cantilever beam</a><a id="DMA-cantilever-beam-1"></a><a class="docs-heading-anchor-permalink" href="#DMA-cantilever-beam" title="Permalink"></a></h1><p>A 3D cantilever beam under sinusoidal, displacement-controlled loading, solved with the <code>VEVP_MOAMMM</code> viscoelastic-viscoplastic model. The runnable script is <code>examples/cantilever_beam_dma.jl</code> and can be executed from the repository root with:</p><pre><code class="language-sh hljs">julia --project=. examples/cantilever_beam_dma.jl</code></pre><p>The direct run writes plot and VTK output. Install <code>Plots.jl</code> and <code>WriteVTK.jl</code> in the active environment before running it with output enabled.</p><p>For a short run without plot or VTK output, start Julia with <code>julia --project=.</code> and run:</p><pre><code class="language-julia hljs">include(&quot;examples/cantilever_beam_dma.jl&quot;)
+result = run_cantilever_beam_dma(; nx=3, ny=1, nz=1, nsteps=4, vtk=nothing)
+println(&quot;converged steps: &quot;, result.converged_steps)</code></pre><h2 id="Problem-setup"><a class="docs-heading-anchor" href="#Problem-setup">Problem setup</a><a id="Problem-setup-1"></a><a class="docs-heading-anchor-permalink" href="#Problem-setup" title="Permalink"></a></h2><p>The beam extends along the x-axis from the clamped root at <code>x = 0</code> to the controlled tip at <code>Lx</code>. The root face is fixed in all three displacement directions. The tip face is fixed in x and z, while the y-displacement follows <code>u_y = A sin(4*pi*t/total_time)</code>.</p><p>This prescribed displacement creates a cyclic loading-unloading path. The force-displacement loop in Figure 1 shows the phase lag and indicates energy dissipation of the viscoelastic response.</p><p><img src="../../assets/cantilever_dma.png" alt="Computed DMA cantilever response"/> <strong>Figure 1.</strong> <em>Hysteresis loop showing viscoelastic response of the cantilever.</em></p><h2 id="Grid,-interpolation,-constraints"><a class="docs-heading-anchor" href="#Grid,-interpolation,-constraints">Grid, interpolation, constraints</a><a id="Grid,-interpolation,-constraints-1"></a><a class="docs-heading-anchor-permalink" href="#Grid,-interpolation,-constraints" title="Permalink"></a></h2><p>We set up a 3D hexahedral beam, a quadratic displacement field, and the two Dirichlet boundaries with standard Ferrite.jl calls:</p><pre><code class="language-julia hljs">nx, ny, nz = 8, 2, 2                              # default mesh resolution
+Lx, Ly, Lz = 5.0, 1.0, 1.0                        # beam dimensions
+grid = generate_grid(Hexahedron, (nx, ny, nz), Vec(0.0, 0.0, 0.0), Vec(Lx, Ly, Lz)) # create the beam mesh
+
+interpolation = Serendipity{RefHexahedron, 2}()^3 # quadratic displacement shape functions in 3D
+dh = DofHandler(grid)                             # create the dof handler for the grid
+add!(dh, :u, interpolation)                       # add displacement dofs under the field name `:u`
+close!(dh)                                        # finalize the dof numbering
+
+amplitude = 0.05                                  # prescribed tip-displacement amplitude
+total_time = 8.0                                  # duration of two loading cycles
+ch = ConstraintHandler(dh)                        # collect Dirichlet boundary conditions
+add!(ch, Dirichlet(:u, getfacetset(grid, &quot;left&quot;),  (x, t) -&gt; [0.0, 0.0, 0.0], [1, 2, 3])) # clamp the root
+add!(ch, Dirichlet(:u, getfacetset(grid, &quot;right&quot;), (x, t) -&gt; [0.0, amplitude * sin(4.0 * pi * t / total_time), 0.0], [1, 2, 3])) # drive the tip in y
+close!(ch)                                        # finalize the constraint data</code></pre><p>For the tip reaction, only the y-component displacement DOFs on the right face are collected:</p><pre><code class="language-julia hljs">function _facet_component_dofs(dh, facets, interpolation, component)
+    ncomp = Ferrite.n_components(interpolation)     # number of vector components in :u
+    base_interpolation = Ferrite.get_base_interpolation(interpolation) # scalar shape functions behind the vector field
+    facet_dofs = Ferrite.dirichlet_facetdof_indices(base_interpolation) # local scalar dofs on each facet
+    facet_cache = FacetCache(dh)                    # reusable cache for cell/facet dof lookup
+    dofs = Int[]                                    # collected global dof numbers
+
+    for facet in facets
+        reinit!(facet_cache, facet)                 # load the current boundary facet
+        _, facet_id = facet                         # local face number in the current cell
+        for local_shape_dof in facet_dofs[facet_id] # scalar shape dofs on this face
+            local_component_dof = (local_shape_dof - 1) * ncomp + component # select component 2, i.e. y
+            push!(dofs, celldofs(facet_cache)[local_component_dof]) # map local dof to global dof
+        end
+    end
+
+    sort!(dofs)                                     # neighboring facets share edge/corner dofs
+    unique!(dofs)                                   # keep each reaction dof once
+    return dofs
+end
+
+react_dofs = _facet_component_dofs(dh, getfacetset(grid, &quot;right&quot;), interpolation, 2) # right-face y dofs</code></pre><p><code>react_dofs</code> is only used to extract the reaction force from the residual vector before constrained entries are zeroed. It does not affect assembly or the actual Dirichlet constraints.</p><h2 id="Material"><a class="docs-heading-anchor" href="#Material">Material</a><a id="Material-1"></a><a class="docs-heading-anchor-permalink" href="#Material" title="Permalink"></a></h2><p>We apply <code>VEVP_MOAMMM</code> with eight bulk and eight shear Maxwell branches:</p><pre><code class="language-julia hljs">mat = VEVP_MOAMMM(
+    6, 80.0, 40.0, 0.25, 0.3, 2.0, 1.0,
+    40.0, 10.0, 5.0, 1.0, 45.0, 10.0, 5.0, 1.0,
+    1.0, 0.1, 0.01,
+    [60.0, 70.0, 80.0, 90.0, 100.0, 110.0, 120.0, 130.0],
+    [0.2625, 0.3375, 0.4125, 0.4875, 0.60, 0.75, 0.9375, 1.20],
+    [60.0, 70.0, 80.0, 90.0, 100.0, 110.0, 120.0, 130.0],
+    [0.2625, 0.3375, 0.4125, 0.4875, 0.60, 0.75, 0.9375, 1.20],
+)</code></pre><p>The relaxation times are chosen near the loading period to cause a significant phase lag. With the default amplitude and parameters, the response stays in the viscoelastic range, so the visible hysteresis is driven by the Maxwell branches rather than by plastic flow. See <a href="../../models/vevp_moammm/#VEVP-MOAMMM">VEVP MOAMMM</a> for the parameter glossary.</p><h2 id="Assembler"><a class="docs-heading-anchor" href="#Assembler">Assembler</a><a id="Assembler-1"></a><a class="docs-heading-anchor-permalink" href="#Assembler" title="Permalink"></a></h2><p><code>create_assembler</code> combines the material, dof handler, and constraints into the reusable FerriteSolidMechanics object:</p><pre><code class="language-julia hljs">assembler = create_assembler(mat, dh, ch; quadrature_order=2)</code></pre><p>The assembler stores one material state per quadrature point of each nonlinear cell and reuses its global stiffness matrix, residual vector, and per-cell element matrices/vectors across time steps.</p><h2 id="Time-and-Newton-loop"><a class="docs-heading-anchor" href="#Time-and-Newton-loop">Time and Newton loop</a><a id="Time-and-Newton-loop-1"></a><a class="docs-heading-anchor-permalink" href="#Time-and-Newton-loop" title="Permalink"></a></h2><p>The prescribed tip displacement is advanced in equal physical time steps. <code>stiffness_matrix</code> evaluates the material response for the current trial displacement, and <code>update_states!(assembler)</code> commits the converged material state:</p><pre><code class="language-julia hljs">u = zeros(ndofs(dh))                    # allocate the displacement vector
+nsteps = 96                             # number of equal physical time steps
+max_newton = 180                        # maximum Newton iterations per time step
+newton_tol = 1e-6                       # residual tolerance
+dt = total_time / nsteps                # physical time increment
+
+for step in 1:nsteps                    # advance the imposed displacement
+    t = step * dt                       # current physical time
+    update!(ch, t)                      # update the sinusoidal boundary value
+    apply!(u, ch)                       # write prescribed displacements into `u`
+
+    for iter in 1:max_newton            # Newton iterations for this time step
+        K, r = stiffness_matrix(assembler, u; dt=dt) # constitutive evaluation and tangent/residual assembly
+        fy_tip = isempty(react_dofs) ? 0.0 : sum(r[react_dofs]) # exract reaction before constrained dofs are zeroed
+        apply_zero!(K, r, ch)           # apply constraints for constrained solving
+        if norm(r) &lt; newton_tol         # stop once the residual is small enough
+            break
+        end
+        u .-= K \ r                     # update the displacement vector
+    end
+    update_states!(assembler)           # commit material states after convergence
+end</code></pre><p>Here, <code>dt</code> is the physical time increment of the sinusoidal loading. Because <code>VEVP_MOAMMM</code> is strain rate-dependent, this value enters the local viscoelastic-viscoplastic update and affects the result.</p><p>The tip reaction must be read before <code>apply_zero!</code>. After <code>apply_zero!</code>, the constrained residual entries are overwritten to consider the Cirichlet boundary conditions and no longer contain the reaction force.</p><h2 id="Postprocessing"><a class="docs-heading-anchor" href="#Postprocessing">Postprocessing</a><a id="Postprocessing-1"></a><a class="docs-heading-anchor-permalink" href="#Postprocessing" title="Permalink"></a></h2><p>We record three histories at each converged step: time <code>t</code>, tip displacement <code>u_y</code>, and tip reaction <code>F_y</code>. After the last step, <code>compute_stresses</code> evaluates the Cauchy stress field:</p><pre><code class="language-julia hljs">stresses = compute_stresses(assembler, u)</code></pre><p><code>phase_lag_degrees(result)</code> estimates the first-harmonic phase lag between tip displacement and reaction force. <code>plot_results(result)</code> writes a three-panel figure with displacement history, reaction history, and the hysteresis loop.</p><p>With the default settings, the direct run prints a short summary similar to:</p><pre><code class="language-text hljs">Solved 3D cantilever beam DMA
+  cells: 32
+  dofs: 783
+  converged steps: 96
+  peak tip uy: 0.05
+  force/displacement phase lag: 38.92 degrees
+  stress entries: 256</code></pre><p>Output files are written to <code>examples/results/cantilever_beam_dma/</code> when plotting or VTK output is enabled.</p><h2 id="Swapping-the-material-model"><a class="docs-heading-anchor" href="#Swapping-the-material-model">Swapping the material model</a><a id="Swapping-the-material-model-1"></a><a class="docs-heading-anchor-permalink" href="#Swapping-the-material-model" title="Permalink"></a></h2><p>The solve loop above can drive any material model that is a subtype of <code>AbstractMaterial</code>. To swap <code>VEVP_MOAMMM</code> for another material model, change only the material constructor:</p><pre><code class="language-julia hljs"># Same script, different material:
+mat = J2Plasticity(70e3, 0.3, 250.0, 1e3)
+mat = VEVP_Zhao2021_AD(1e3, 1e3, 8, 0.1, 0.5, 0.8, 0.5, 1e-3, 1.0, 2.0, 4.0, 0.0, 0.5, 1.0)</code></pre><p>The assembler calls the new material&#39;s element routine and state-update methods through the same interface.</p><h2 id="Plain-program"><a class="docs-heading-anchor" href="#Plain-program">Plain program</a><a id="Plain-program-1"></a><a class="docs-heading-anchor-permalink" href="#Plain-program" title="Permalink"></a></h2><p>The full runnable source is rendered from <code>examples/cantilever_beam_dma.jl</code>:</p><pre><code class="language-julia hljs">using Ferrite
+using FerriteSolidMechanics
+using LinearAlgebra
+
+&quot;&quot;&quot;
+    run_cantilever_beam_dma(; kwargs...)
+
+Solve a 3D cantilever beam under sinusoidal displacement control (DMA-style) using the
+VEVP_MOAMMM viscoelastic-viscoplastic material model.
+
+The beam lies along the x-axis from x=0 (root) to x=Lx (tip). The root face is fully
+clamped. The tip face is clamped in x and z while a sinusoidal y-displacement is
+prescribed, mimicking a driven jaw.
+
+Quadratic serendipity hexahedral elements are used.
+
+Pass `vtk=&quot;my/output/dir&quot;` to write a ParaView PVD collection with the displacement field
+at every converged time step.
+&quot;&quot;&quot;
+function run_cantilever_beam_dma(;
+    nx::Int=8,
+    ny::Int=2,
+    nz::Int=2,
+    Lx::Float64=5.0,
+    Ly::Float64=1.0,
+    Lz::Float64=1.0,
+    amplitude::Float64=0.05,
+    total_time::Float64=8.0,
+    nsteps::Int=96,
+    max_newton::Int=20,
+    newton_tol::Float64=1e-6,
+    vtk::Union{String,Nothing}=nothing,
+)
+    grid = generate_grid(Hexahedron, (nx, ny, nz), Vec(0.0, 0.0, 0.0), Vec(Lx, Ly, Lz))
+
+    interpolation = Serendipity{RefHexahedron, 2}()^3
+    dh = DofHandler(grid)
+    add!(dh, :u, interpolation)
+    close!(dh)
+
+    # Boundary conditions
+    # Root: fully clamped
+    # Tip: clamped in x and z, sinusoidal y-displacement
+    ch = ConstraintHandler(dh)
+    add!(ch, Dirichlet(:u, getfacetset(grid, &quot;left&quot;),  (x, t) -&gt; [0.0, 0.0, 0.0], [1, 2, 3]))
+    add!(ch, Dirichlet(:u, getfacetset(grid, &quot;right&quot;), (x, t) -&gt; [0.0, amplitude * sin(4.0 * pi * t / total_time), 0.0], [1, 2, 3]))
+    close!(ch)
+
+    # Reaction DOFs for the tip y-displacement. These are only used to read
+    # reactions from the residual before constrained entries are zeroed.
+    react_dofs = _facet_component_dofs(dh, getfacetset(grid, &quot;right&quot;), interpolation, 2)
+
+    # Material: VEVP_MOAMMM with 8 Maxwell branches. This is more than
+    # the demo needs, but shows the multi-branch interface.
+    mat = VEVP_MOAMMM(
+        6, 80.0, 40.0, 0.25, 0.3, 2.0, 1.0,
+        40.0, 10.0, 5.0, 1.0, 45.0, 10.0, 5.0, 1.0,
+        1.0, 0.1, 0.01,
+        [60.0, 70.0, 80.0, 90.0, 100.0, 110.0, 120.0, 130.0],
+        [0.2625, 0.3375, 0.4125, 0.4875, 0.60, 0.75, 0.9375, 1.20],
+        [60.0, 70.0, 80.0, 90.0, 100.0, 110.0, 120.0, 130.0],
+        [0.2625, 0.3375, 0.4125, 0.4875, 0.60, 0.75, 0.9375, 1.20],
+    )
+
+    assembler = create_assembler(mat, dh, ch; quadrature_order=2)
+
+    u = zeros(ndofs(dh))
+    u_prev = similar(u)
+    dt = total_time / nsteps
+    converged_steps = 0
+
+    history_t = Float64[]
+    history_uy = Float64[]
+    history_fy = Float64[]
+
+    # VTK: open PVD collection (requires WriteVTK)
+    if vtk !== nothing
+        Base.invokelatest(_dma_ensure_writevtk_loaded)
+        mkpath(dirname(vtk))
+    end
+    pvd = vtk !== nothing ? Base.invokelatest(_dma_open_pvd, vtk) : nothing
+
+    for step in 1:nsteps
+        t = step * dt
+        u_prev .= u
+        update!(ch, t)
+        apply!(u, ch)
+
+        converged = false
+        final_res_norm = 0.0
+        fy_tip = 0.0
+        for iter in 1:max_newton
+            K, r = stiffness_matrix(assembler, u; dt=dt)
+            # Reaction force: extract BEFORE apply_zero! zeros out constrained DOFs
+            fy_tip = isempty(react_dofs) ? 0.0 : sum(r[react_dofs])
+            apply_zero!(K, r, ch)
+            final_res_norm = norm(r)
+            if final_res_norm &lt; newton_tol
+                converged = true
+                break
+            end
+            u .-= K \ r
+        end
+        if !converged
+            u .= u_prev
+            error(&quot;Newton iteration did not converge at time step $step (t=$t, norm(r)=$final_res_norm)&quot;)
+        end
+        update_states!(assembler)
+        converged_steps += 1
+
+        # VTK: write converged state to PVD collection
+        if pvd !== nothing
+            Base.invokelatest(_dma_write_vtk_step!, pvd, dh, u, t, &quot;$(vtk)_$step&quot;)
+        end
+
+        # Tip displacement (average of prescribed DOFs)
+        uy_tip = isempty(react_dofs) ? 0.0 : sum(u[react_dofs]) / length(react_dofs)
+
+        push!(history_t, t)
+        push!(history_uy, uy_tip)
+        push!(history_fy, fy_tip)
+    end
+
+    # VTK: finalize PVD collection
+    pvd !== nothing &amp;&amp; Base.invokelatest(_dma_close_pvd, pvd)
+
+    stresses = compute_stresses(assembler, u)
+    return (
+        u=u,
+        stresses=stresses,
+        grid=grid,
+        dh=dh,
+        ch=ch,
+        assembler=assembler,
+        converged_steps=converged_steps,
+        history_t=history_t,
+        history_uy=history_uy,
+        history_fy=history_fy,
+    )
+end
+
+function _dma_ensure_writevtk_loaded()
+    try
+        @eval using WriteVTK
+    catch
+        throw(ArgumentError(&quot;VTK output requires WriteVTK.jl in the active environment&quot;))
+    end
+    return nothing
+end
+
+# Internal helpers: called via invokelatest because WriteVTK is loaded at runtime
+_dma_open_pvd(vtk) = paraview_collection(vtk)
+_dma_close_pvd(pvd) = vtk_save(pvd)
+
+function _dma_write_vtk_step!(pvd, dh, u, time, path)
+    VTKGridFile(path, dh) do vtk_file
+        write_solution(vtk_file, dh, u)
+        pvd[time] = vtk_file
+    end
+    return nothing
+end
+
+function _facet_component_dofs(dh, facets, interpolation, component::Int)
+    ncomp = Ferrite.n_components(interpolation)
+    1 &lt;= component &lt;= ncomp || throw(ArgumentError(&quot;component must be in 1:$ncomp&quot;))
+
+    # Ferrite interleaves vector dofs by component, so use the scalar base
+    # interpolation to find which shape functions live on each facet.
+    base_interpolation = Ferrite.get_base_interpolation(interpolation)
+    facet_dofs = Ferrite.dirichlet_facetdof_indices(base_interpolation)
+    facet_cache = FacetCache(dh)
+    dofs = Int[]
+
+    for facet in facets
+        reinit!(facet_cache, facet)
+        _, facet_id = facet
+        for local_shape_dof in facet_dofs[facet_id]
+            # Scalar shape dof -&gt; this component&#39;s local dof -&gt; global dof
+            local_component_dof = (local_shape_dof - 1) * ncomp + component
+            push!(dofs, celldofs(facet_cache)[local_component_dof])
+        end
+    end
+
+    sort!(dofs)
+    unique!(dofs)
+    return dofs
+end
+
+# Internal helper: called via invokelatest to avoid issues when Plots is loaded during runtime.
+function _plot_results_impl(result, outdir)
+    t = result.history_t
+    uy = result.history_uy
+    fy = result.history_fy
+
+    # --- Panel 1: Tip displacement vs time ---
+    p1 = plot(
+        t, uy,
+        linewidth=2,
+        color=:royalblue,
+        xlabel=&quot;Time&quot;,
+        ylabel=&quot;Tip u_y&quot;,
+        title=&quot;Tip Displacement&quot;,
+        legend=false,
+        marker=:circle,
+        markersize=3,
+    )
+
+    # --- Panel 2: Reaction force vs time ---
+    p2 = plot(
+        t, fy,
+        linewidth=2,
+        color=:firebrick,
+        xlabel=&quot;Time&quot;,
+        ylabel=&quot;Reaction F_y&quot;,
+        title=&quot;Reaction Force&quot;,
+        legend=false,
+        marker=:diamond,
+        markersize=3,
+    )
+
+    # --- Panel 3: Hysteresis loop (F vs u) ---
+    # Close the loop by prepending the origin
+    p3 = plot(
+        vcat(0.0, uy),
+        vcat(0.0, fy),
+        linewidth=2,
+        color=:darkgreen,
+        xlabel=&quot;Tip u_y&quot;,
+        ylabel=&quot;Reaction F_y&quot;,
+        title=&quot;Hysteresis Loop&quot;,
+        legend=false,
+        marker=:auto,
+        markersize=2,
+    )
+
+    # --- Compose figure ---
+    plt = plot(p1, p2, p3,
+        layout=(3, 1),
+        size=(900, 900),
+        dpi=150,
+    )
+
+    mkpath(outdir)
+    outpath = joinpath(outdir, &quot;cantilever_dma.png&quot;)
+    savefig(plt, outpath)
+    println(&quot;Plot saved to: $outpath&quot;)
+    return outpath
+end
+
+&quot;&quot;&quot;
+    plot_results(result; outdir=&quot;.&quot;)
+
+Write a three-panel PNG (tip displacement, reaction force, and force-displacement
+hysteresis loop) from a DMA cantilever result. Requires `Plots.jl`.
+&quot;&quot;&quot;
+function plot_results(result; outdir=&quot;.&quot;)
+    try
+        @eval using Plots
+    catch
+        throw(ArgumentError(&quot;plot_results requires Plots.jl in the active environment&quot;))
+    end
+    return Base.invokelatest(_plot_results_impl, result, outdir)
+end
+
+&quot;&quot;&quot;
+    phase_lag_degrees(result)
+
+Estimate the first-harmonic phase lag between the recorded tip displacement
+and reaction force histories, in degrees.
+&quot;&quot;&quot;
+function phase_lag_degrees(result)
+    t = result.history_t
+    u = result.history_uy
+    f = result.history_fy
+    isempty(t) &amp;&amp; return NaN
+
+    total_time = maximum(t)
+    omega = 4.0 * pi / total_time
+    s = sin.(omega .* t)
+    c = cos.(omega .* t)
+
+    phase_u = atan(sum(u .* c), sum(u .* s))
+    phase_f = atan(sum(f .* c), sum(f .* s))
+    lag = abs(mod(phase_f - phase_u + pi, 2.0 * pi) - pi)
+    return lag * 180.0 / pi
+end
+
+if abspath(PROGRAM_FILE) == @__FILE__
+    results_dir = joinpath(@__DIR__, &quot;results&quot;, &quot;cantilever_beam_dma&quot;)
+    result = run_cantilever_beam_dma(; vtk=joinpath(results_dir, &quot;cantilever_dma&quot;))
+    println(&quot;Solved 3D cantilever beam DMA&quot;)
+    println(&quot;  cells: $(getncells(result.grid))&quot;)
+    println(&quot;  dofs: $(ndofs(result.dh))&quot;)
+    println(&quot;  converged steps: $(result.converged_steps)&quot;)
+    println(&quot;  peak tip uy: $(maximum(abs, result.history_uy))&quot;)
+    println(&quot;  force/displacement phase lag: $(round(phase_lag_degrees(result); digits=2)) degrees&quot;)
+    println(&quot;  stress entries: $(length(result.stresses))&quot;)
+    plot_results(result; outdir=results_dir)
+end</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../plate_with_hole/">« 2D plate with a hole</a><a class="docs-footer-nextpage" href="../adaptive_time_stepping/">Adaptive time stepping »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Sunday 2 August 2026 22:04">Sunday 2 August 2026</span>. Using Julia version 1.12.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

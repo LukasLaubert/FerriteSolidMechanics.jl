@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>MPI four-point bending · FerriteSolidMechanics.jl</title><meta name="title" content="MPI four-point bending · FerriteSolidMechanics.jl"/><meta property="og:title" content="MPI four-point bending · FerriteSolidMechanics.jl"/><meta property="twitter:title" content="MPI four-point bending · FerriteSolidMechanics.jl"/><meta name="description" content="Documentation for FerriteSolidMechanics.jl."/><meta property="og:description" content="Documentation for FerriteSolidMechanics.jl."/><meta property="twitter:description" content="Documentation for FerriteSolidMechanics.jl."/><meta property="og:url" content="https://LukasLaubert.github.io/FerriteSolidMechanics.jl/tutorials/mpi_four_point_bending/"/><meta property="twitter:url" content="https://LukasLaubert.github.io/FerriteSolidMechanics.jl/tutorials/mpi_four_point_bending/"/><link rel="canonical" href="https://LukasLaubert.github.io/FerriteSolidMechanics.jl/tutorials/mpi_four_point_bending/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">FerriteSolidMechanics.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox"/><label class="tocitem" for="menuitem-2"><span class="docs-label">Material models</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../models/">Overview</a></li><li><a class="tocitem" href="../../models/linear_elasticity/">Linear Elasticity</a></li><li><input class="collapse-toggle" id="menuitem-2-3" type="checkbox"/><label class="tocitem" for="menuitem-2-3"><span class="docs-label">Hyperelastic</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../models/neo_hooke/">Neo–Hookean</a></li><li><a class="tocitem" href="../../models/arruda_boyce/">Arruda–Boyce</a></li><li><a class="tocitem" href="../../models/mooney_rivlin/">Mooney–Rivlin</a></li><li><a class="tocitem" href="../../models/ogden/">Ogden</a></li></ul></li><li><a class="tocitem" href="../../models/j2_plasticity/">J2 Plasticity</a></li><li><a class="tocitem" href="../../models/vepd_detrez2010/">VEPD Detrez 2010</a></li><li><a class="tocitem" href="../../models/vevp_zhao2021/">VEVP Zhao 2021</a></li><li><a class="tocitem" href="../../models/vevp_moammm/">VEVP MOAMMM</a></li><li><a class="tocitem" href="../../experimental/">Experimental models</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox" checked/><label class="tocitem" for="menuitem-3"><span class="docs-label">Tutorials</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../plate_with_hole/">2D plate with a hole</a></li><li><a class="tocitem" href="../cantilever_dma/">DMA cantilever beam</a></li><li><a class="tocitem" href="../adaptive_time_stepping/">Adaptive time stepping</a></li><li class="is-active"><a class="tocitem" href>MPI four-point bending</a><ul class="internal"><li><a class="tocitem" href="#Problem-setup"><span>Problem setup</span></a></li><li><a class="tocitem" href="#Grid,-interpolation,-constraints,-loads"><span>Grid, interpolation, constraints, loads</span></a></li><li><a class="tocitem" href="#Material"><span>Material</span></a></li><li><a class="tocitem" href="#Assembler"><span>Assembler</span></a></li><li><a class="tocitem" href="#External-load"><span>External load</span></a></li><li><a class="tocitem" href="#Load-and-Newton-loop"><span>Load and Newton loop</span></a></li><li><a class="tocitem" href="#Postprocessing"><span>Postprocessing</span></a></li><li><a class="tocitem" href="#What-MPI-changes"><span>What MPI changes</span></a></li><li><a class="tocitem" href="#Distributed-solve-for-large-3D-systems"><span>Distributed solve for large 3D systems</span></a></li><li><a class="tocitem" href="#Scaling-notes"><span>Scaling notes</span></a></li><li><a class="tocitem" href="#Running-locally-and-on-clusters"><span>Running locally and on clusters</span></a></li><li><a class="tocitem" href="#SLURM-submission-script"><span>SLURM submission script</span></a></li><li><a class="tocitem" href="#Plain-program"><span>Plain program</span></a></li></ul></li></ul></li><li><a class="tocitem" href="../../concepts/">Concepts</a></li><li><a class="tocitem" href="../../loads/">External loads</a></li><li><a class="tocitem" href="../../wrappers/">In-plane wrappers</a></li><li><a class="tocitem" href="../../performance/">Performance and parallel execution</a></li><li><a class="tocitem" href="../../developer_guide/">Developer guide</a></li><li><a class="tocitem" href="../../faq/">FAQ</a></li><li><a class="tocitem" href="../../api/">API reference</a></li><li><a class="tocitem" href="../../api_models/">Material model API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>MPI four-point bending</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>MPI four-point bending</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/LukasLaubert/FerriteSolidMechanics.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/LukasLaubert/FerriteSolidMechanics.jl/blob/master/docs/src/tutorials/mpi_four_point_bending.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="MPI-four-point-bending"><a class="docs-heading-anchor" href="#MPI-four-point-bending">MPI four-point bending</a><a id="MPI-four-point-bending-1"></a><a class="docs-heading-anchor-permalink" href="#MPI-four-point-bending" title="Permalink"></a></h1><p>A 2D plane strain four-point-bending beam using <code>VEVP_Zhao2021_AD</code>, solved with FerriteSolidMechanics&#39; threaded and MPI assembly paths. The runnable script is <code>examples/mpi_four_point_bending.jl</code>; the SLURM submission script is <code>examples/submit_four_point_bending.sh</code>.</p><p>Run the one-rank script from the repository root with:</p><pre><code class="language-sh hljs">julia --project=. examples/mpi_four_point_bending.jl</code></pre><p>Run the same script through MPI with:</p><pre><code class="language-sh hljs">mpiexec -n 4 julia --project=. --threads=1 examples/mpi_four_point_bending.jl</code></pre><p>The script&#39;s <code>main()</code> initializes MPI before calling the example function. Without <code>mpiexec</code>, this is a single-rank MPI run. The direct run writes PVD/VTU output and therefore requires <code>WriteVTK.jl</code> in the active environment. For a no-output run that avoids <code>WriteVTK.jl</code>, include the script and call <code>main(; vtk=nothing)</code>:</p><pre><code class="language-sh hljs">julia --project=. --threads=1 -e &quot;include(ARGS[1]); main(; vtk=nothing)&quot; examples/mpi_four_point_bending.jl</code></pre><h2 id="Problem-setup"><a class="docs-heading-anchor" href="#Problem-setup">Problem setup</a><a id="Problem-setup-1"></a><a class="docs-heading-anchor-permalink" href="#Problem-setup" title="Permalink"></a></h2><p>In its default configuration, the beam is under plane strain with aspect ratio <code>L/H = 10</code>. Its structured quadrilateral mesh spans <code>L x H</code> and contains <code>nx = 10*density</code> and <code>ny = density</code> elements with <code>density = 4</code> as the default value. As shown in Figure 1, the supports and loads are applied on four boundary segments:</p><ul><li><code>support_left</code>: bottom edge at <code>x = 0.10L</code>, pinned with <code>u_x = u_y = 0</code>,</li><li><code>support_right</code>: bottom edge at <code>x = 0.90L</code>, roller support with <code>u_y = 0</code>,</li><li><code>load_left</code>: top edge at <code>x = 0.30L</code>, downward traction,</li><li><code>load_right</code>: top edge at <code>x = 0.70L</code>, downward traction.</li></ul><p>The load history ramps from zero to full load, holds the full load, unloads immediately to zero, and then keeps a zero-load recovery phase. The load is applied as a surface traction integrated over the two top boundary segments, ensuring well-posed boundary conditions across mesh refinements.</p><p><img src="../../assets/four_point_bending_setup.svg" alt="Four-point bending setup"/> <strong>Figure 1.</strong> <em>Four-point bending setup with pinned and roller supports, and loaded top segments.</em></p><h2 id="Grid,-interpolation,-constraints,-loads"><a class="docs-heading-anchor" href="#Grid,-interpolation,-constraints,-loads">Grid, interpolation, constraints, loads</a><a id="Grid,-interpolation,-constraints,-loads-1"></a><a class="docs-heading-anchor-permalink" href="#Grid,-interpolation,-constraints,-loads" title="Permalink"></a></h2><p>The example creates the mesh, boundary facetsets, displacement field, supports, and load integration data with standard Ferrite.jl calls (this setup is identical to a serial run; see <a href="../plate_with_hole/#2D-plate-with-a-hole">2D plate with a hole</a> for a detailed walkthrough):</p><pre><code class="language-julia hljs">density = 4                                        # mesh density parameter
+beam_length = 10.0                                 # beam length L
+beam_height = 1.0                                  # beam height H
+nx = 10 * density                                  # elements along the beam
+ny = density                                       # elements along the height
+grid = generate_grid(Quadrilateral, (nx, ny), Vec(0.0, 0.0), Vec(beam_length, beam_height)) # create the beam mesh
+
+hx = beam_length / nx                              # element width
+half_segment = max(1.01 * hx, 0.025 * beam_length) # segment half-width, at least one facet
+on_bottom_segment(x, x0) = isapprox(x[2], 0.0; atol=1e-10) &amp;&amp; abs(x[1] - x0) &lt;= half_segment      # true on bottom edge inside the segment
+on_top_segment(x, x0) = isapprox(x[2], beam_height; atol=1e-10) &amp;&amp; abs(x[1] - x0) &lt;= half_segment # true on top edge inside the segment
+addfacetset!(grid, &quot;support_left&quot;,  x -&gt; on_bottom_segment(x, 0.10 * beam_length)) # pinned support segment
+addfacetset!(grid, &quot;support_right&quot;, x -&gt; on_bottom_segment(x, 0.90 * beam_length)) # roller support segment
+addfacetset!(grid, &quot;load_left&quot;,     x -&gt; on_top_segment(x, 0.30 * beam_length))    # left load segment
+addfacetset!(grid, &quot;load_right&quot;,    x -&gt; on_top_segment(x, 0.70 * beam_length))    # right load segment
+
+interpolation = Lagrange{RefQuadrilateral,1}()^2  # linear displacement shape functions in 2D
+dh = DofHandler(grid)                             # create dof handler for the grid
+add!(dh, :u, interpolation)                       # add displacement dofs under the field name `:u`
+close!(dh)                                        # finalize the dof numbering
+
+ch = ConstraintHandler(dh)                        # collect support boundary conditions
+add!(ch, Dirichlet(:u, getfacetset(grid, &quot;support_left&quot;),  (x, t) -&gt; [0.0, 0.0], [1, 2])) # pinned support
+add!(ch, Dirichlet(:u, getfacetset(grid, &quot;support_right&quot;), (x, t) -&gt; [0.0], [2]))         # roller support
+close!(ch)                                        # finalize the constraint data
+</code></pre><p>The supports are enforced as displacement constraints during every iteration of the Newton loop, while the external traction is assembled once at the beginning of each load step (see <a href="#Load-and-Newton-loop">Load and Newton loop</a>).</p><h2 id="Material"><a class="docs-heading-anchor" href="#Material">Material</a><a id="Material-1"></a><a class="docs-heading-anchor-permalink" href="#Material" title="Permalink"></a></h2><p>We employ the 3D <code>VEVP_Zhao2021_AD</code> model through a plane strain wrapper:</p><pre><code class="language-julia hljs">material = PlaneStrain(VEVP_Zhao2021_AD(5.0, 20.0, 6, 0.0, 0.0, 283.0, 18.51, 0.1421, 0.6152, 3.0, 3.0, 0.0, 0.0, 283.0))</code></pre><p><code>PlaneStrain</code> embeds the 2D deformation into the 3D material model and extracts the in-plane response.</p><h2 id="Assembler"><a class="docs-heading-anchor" href="#Assembler">Assembler</a><a id="Assembler-1"></a><a class="docs-heading-anchor-permalink" href="#Assembler" title="Permalink"></a></h2><p>We call <code>create_assembler</code> exactly as in the serial tutorials:</p><pre><code class="language-julia hljs">assembler = create_assembler(material, dh, ch; quadrature_order=2)</code></pre><p>The same call works similarly in a non-MPI Julia session, a one-rank MPI run, and a multi-rank MPI run. When MPI has been initialized, the assembler distributes nonlinear cell work across ranks and reduces the assembled global tangent and internal force vector.</p><h2 id="External-load"><a class="docs-heading-anchor" href="#External-load">External load</a><a id="External-load-1"></a><a class="docs-heading-anchor-permalink" href="#External-load" title="Permalink"></a></h2><p>The downward pressure on the two loading pads is declared on a <a href="../../api/#FerriteSolidMechanics.LoadHandler"><code>LoadHandler</code></a>, which is built and closed the way the <code>ConstraintHandler</code> above is:</p><pre><code class="language-julia hljs">lh = LoadHandler(assembler)              # takes dh, thickness and quadrature orders from the assembler
+for name in (&quot;load_left&quot;, &quot;load_right&quot;)  # both loading pads carry the same pressure
+    add!(lh, Traction(name, (x, factor) -&gt; Vec(0.0, -load_pressure * factor))) # downward surface traction
+end
+close!(lh)                               # resolve the facetsets and validate the load functions</code></pre><p>The load function receives the quadrature point coordinate <code>x</code> and, as its second argument, the factor <a href="../../api/#FerriteSolidMechanics.external_forces!"><code>external_forces!</code></a> is called with. This example passes a load factor rather than physical time. Through <code>x</code> any spatial profile can be written directly in the load function, for example <code>Vec(0.0, -load_pressure * factor * x[1] / beam_length)</code> for a pressure growing linearly along the beam. See the <a href="../../loads/">External loads</a> page for the other load types and for the <code>Pressure</code> shorthand that applies a traction along the facet normal.</p><h2 id="Load-and-Newton-loop"><a class="docs-heading-anchor" href="#Load-and-Newton-loop">Load and Newton loop</a><a id="Load-and-Newton-loop-1"></a><a class="docs-heading-anchor-permalink" href="#Load-and-Newton-loop" title="Permalink"></a></h2><p>The load factor is prescribed by an array of converged load steps:</p><pre><code class="language-julia hljs">load_profile = vcat(
+    collect(range(1.0 / load_steps, 1.0; length=load_steps)), # ramp up
+    fill(1.0, hold_steps),                                    # hold full load
+    [0.0],                                                    # immediate unload (replace with a short ramp if too abrupt)
+    fill(0.0, recover_steps),                                 # recovery
+)</code></pre><p>At every load step the external force vector is evaluated once, and FerriteSolidMechanics assembles the internal force and tangent inside the Newton loop via <code>stiffness_matrix</code>:</p><pre><code class="language-julia hljs">for (step, load_factor) in enumerate(load_profile)            # advance the load history
+    f_ext = external_forces!(lh, load_factor)                 # dead load: once per step, not per iteration
+
+    for iter in 1:max_newton                                  # Newton iterations for this load step
+        K, f_int_step = stiffness_matrix(assembler, u; dt=dt) # constitutive evaluation and tangent/internal force assembly
+        copyto!(f_int, f_int_step)                            # store internal force for output
+        residual .= f_int .- f_ext                            # residual with external traction
+        apply_zero!(K, residual, ch)                          # apply zero-displacement constraints
+
+        threshold = newton_tol * max(norm(f_ext), 1.0)        # relative residual tolerance
+        if norm(residual) &lt;= threshold                        # stop once the residual is small enough
+            break
+        end
+        u .-= K \ residual                                    # update the displacement vector
+    end
+    update_states!(assembler)                                 # commit material states after convergence
+end</code></pre><p>Because the <code>VEVP_Zhao2021_AD</code> model is rate-dependent, the <code>dt</code> passed to <code>stiffness_matrix</code> is the physical time increment between two entries of <code>load_profile</code>. This example keeps <code>dt</code> fixed and calls <code>stiffness_matrix</code> directly, which is sufficient for this load case and material parameters. For simulations where the local material update may fail, replace the assembly call (<code>stiffness_matrix</code>) with <a href="../../api/#FerriteSolidMechanics.try_stiffness_matrix"><code>try_stiffness_matrix</code></a> and reject or retry the whole load step as shown in the <a href="../adaptive_time_stepping/">Adaptive time stepping</a> tutorial. Fail-recovery must be supported by the material model chosen; see <a href="../../developer_guide/#Feature-support">Feature support</a>. Since <a href="../../api/#FerriteSolidMechanics.try_stiffness_matrix"><code>try_stiffness_matrix</code></a> synchronizes local failures automatically across MPI ranks, the adaptive time stepping loop requires no MPI-specific changes: if <code>converged = false</code>, every rank rolls back, reduces <code>dt</code>, and retries the same step.</p><h2 id="Postprocessing"><a class="docs-heading-anchor" href="#Postprocessing">Postprocessing</a><a id="Postprocessing-1"></a><a class="docs-heading-anchor-permalink" href="#Postprocessing" title="Permalink"></a></h2><p>The example writes VTK files and a text history only on rank 0. Stress output is evaluated inside <code>write_output_step!</code> when VTK output is enabled:</p><pre><code class="language-julia hljs">stresses = compute_stresses(assembler, u)</code></pre><p>With the default output path, rank 0 writes <code>examples/results/mpi_four_point_bending/four_point_bending.pvd</code>. Pass <code>vtk = nothing</code> to <code>run_mpi_four_point_bending()</code> (or <code>main(; vtk=nothing)</code>) to disable PVD/VTU output and skip the stress-output pass.</p><h2 id="What-MPI-changes"><a class="docs-heading-anchor" href="#What-MPI-changes">What MPI changes</a><a id="What-MPI-changes-1"></a><a class="docs-heading-anchor-permalink" href="#What-MPI-changes" title="Permalink"></a></h2><p>The Newton and the outer load loops are the same in serial, threaded, and MPI runs. The MPI-specific behavior is already handled inside <code>GenericMaterialAssembler</code>:</p><ul><li><code>create_assembler</code> assigns nonlinear cells to ranks by a static round-robin rule.</li><li><code>stiffness_matrix</code> evaluates only the rank-owned cells and then reduces the global tangent and internal force vector across ranks.</li><li><code>compute_stresses</code> follows the same ownership-and-reduction pattern for stress output.</li><li><code>update_states!</code> commits only the quadrature states owned by the current rank.</li></ul><p>Threading is independent of MPI: Each rank uses the specified Julia threads to evaluate its owned elements (cells) in parallel during stiffness and stress assembly, while quadrature points within a cell are always evaluated sequentially by the thread processing that cell.</p><p>Note that while the constitutive and element-assembly work is distributed, the sparse linear solve is not: After the reduction, every rank has the full global tangent stiffness matrix <code>K</code> and internal force vector <code>f_int</code>, constructs the residual, and solves the same system via <code>K \ residual</code>. MPI can only improve runtime when there is enough nonlinear element work per rank to dominate the reduction overhead and rank-replicated solving.</p><p>Two solvers are available for that system:</p><ul><li><code>K \ residual</code>, the standard replicated solve this example uses. Here, every rank factorizes the full system, so each pays the memory of one factorization. It needs no extra packages and measured faster at every 2D grid size.</li><li><a href="../../api/#FerriteSolidMechanics.distributed_solve"><code>distributed_solve</code></a>, which splits one factorization across the ranks with MUMPS. It requires <code>import MUMPS</code> and runs on Unix only. In 3D it measured faster at every mesh size above roughly 4k DOFs, by 5.8× at 108k DOFs and 10.2× at 273k, and it uses far less memory per rank. See <a href="#Distributed-solve-for-large-3D-systems">Distributed solve for large 3D systems</a>.</li></ul><p>This example is 2D and therefore keeps <code>K \ residual</code>; the BLAS tuning (<code>BLAS.set_num_threads</code>) applies to that solve only.</p><div class="admonition is-success" id="Speed-up-the-replicated-solve-49f115aa9204fa73"><header class="admonition-header">Speed up the replicated solve<a class="admonition-anchor" href="#Speed-up-the-replicated-solve-49f115aa9204fa73" title="Permalink"></a></header><div class="admonition-body"><p>BLAS threading helps the replicated solve in 3D, where the linear solve dominates – but only when a rank has the node to itself. The example calls <code>LinearAlgebra.BLAS.set_num_threads(recommended_blas_threads(dh))</code> once, before the load loop; see <a href="../../api/#FerriteSolidMechanics.recommended_blas_threads"><code>recommended_blas_threads</code></a>. The helper reads the grid dimension and the ranks sharing the node, so it returns <code>1</code> for this 2D example, <code>ncores</code> for a 3D model on one rank per node, and <code>1</code> again as soon as ranks share a node. The 2D value is an active setting, not a default: Julia starts BLAS at <code>Sys.CPU_THREADS ÷ 2</code>, and on a 72-core node the 2D solve measured 2.61 s per call at 1 thread against 3.38 s at 18 and 3.49 s at 72.</p></div></div><p><a href="../../api/#FerriteSolidMechanics.recommended_solve_settings"><code>recommended_solve_settings</code></a> returns the solver, rank and thread counts, BLAS threads and estimated memory for a given grid and node, so these rules need not be applied by hand. For the measurements behind it, by dimension, mesh size and material, see <a href="../../performance/#Performance-and-parallel-execution">Performance and parallel execution</a>.</p><h3 id="MPI-troubleshooting"><a class="docs-heading-anchor" href="#MPI-troubleshooting">MPI troubleshooting</a><a id="MPI-troubleshooting-1"></a><a class="docs-heading-anchor-permalink" href="#MPI-troubleshooting" title="Permalink"></a></h3><p>A healthy <code>mpiexec -n 4</code> run starts with a single startup line from rank 0 that includes <code>ranks=4</code>. A broken launcher setup may instead print one startup line per process with <code>ranks=1</code>; in that case, the launcher is not connected to the MPI library used by MPI.jl. Before running the full example, this minimal command should print four ranks:</p><pre><code class="language-sh hljs">mpiexec -n 4 julia --project=. --threads=1 -e &quot;using MPI; MPI.Init(); write(stdout, string(:rank, &#39; &#39;, MPI.Comm_rank(MPI.COMM_WORLD), &#39; &#39;, &#39;/&#39;, &#39; &#39;, MPI.Comm_size(MPI.COMM_WORLD), &#39;\n&#39;)); flush(stdout); MPI.Finalize()&quot;</code></pre><div class="admonition is-success" id="MPI-launcher-/-library-mismatch-(Linux)-398cf07a562d30ee"><header class="admonition-header">MPI launcher / library mismatch (Linux)<a class="admonition-anchor" href="#MPI-launcher-/-library-mismatch-(Linux)-398cf07a562d30ee" title="Permalink"></a></header><div class="admonition-body"><p>If <code>mpiexec</code> works on one machine but fails on a cluster during <code>MPI.Init()</code>, first check that the launcher and the MPI library loaded by MPI.jl come from the same MPI implementation:</p><pre><code class="language-sh hljs">which mpiexec
+mpiexec --version
+julia --project=. -e &#39;using MPI; println(MPI.MPI_LIBRARY); println(MPI.mpiexec())&#39;</code></pre><p>A common failure is launching with system Open MPI while MPI.jl loads MPICH. After loading the cluster MPI module, configure MPI.jl to use that system MPI. <code>MPIPreferences</code> sets this on the environment you launch from, not on FerriteSolidMechanics, so add it to that environment first:</p><pre><code class="language-sh hljs">julia --project=. -e &#39;using Pkg; Pkg.add(&quot;MPIPreferences&quot;)&#39;
+julia --project=. -e &#39;using MPIPreferences; MPIPreferences.use_system_binary(; mpiexec=&quot;mpiexec&quot;)&#39;
+julia --project=. -e &#39;using Pkg; Pkg.precompile()&#39;</code></pre><p>Restart Julia and recheck <code>MPI.MPI_LIBRARY</code>. If automatic detection cannot find the MPI library, locate <code>libmpi</code> with your cluster module tools or <code>ldconfig -p | grep libmpi</code>. Then pass the full path, for example <code>library_names=[&quot;/path/to/libmpi.so&quot;]</code>, and set <code>abi=&quot;OpenMPI&quot;</code> or <code>abi=&quot;MPICH&quot;</code> to match the loaded module.</p></div></div><div class="admonition is-success" id="MPI-launcher-/-library-mismatch-(Windows)-40476a347d3da7d4"><header class="admonition-header">MPI launcher / library mismatch (Windows)<a class="admonition-anchor" href="#MPI-launcher-/-library-mismatch-(Windows)-40476a347d3da7d4" title="Permalink"></a></header><div class="admonition-body"><p>On Windows, <code>where mpiexec</code> may list multiple MPI launchers.</p><pre><code class="language-cmd hljs">where mpiexec
+julia --project=. -e &quot;using MPI; println(MPI.MPI_LIBRARY); println(MPI.mpiexec())&quot;</code></pre><p>If MPI.jl reports <code>MicrosoftMPI</code>, <code>C:\Program Files\Microsoft MPI\Bin\mpiexec.exe</code> should appear either as the only entry or before other <code>mpiexec.exe</code> entries. If it does not, move <code>C:\Program Files\Microsoft MPI\Bin</code> earlier in <code>PATH</code> (system environment variables), or launch with the full Microsoft MPI <code>mpiexec.exe</code> path instead:</p><pre><code class="language-cmd hljs">&quot;C:\Program Files\Microsoft MPI\Bin\mpiexec.exe&quot; -n 4 julia --project=. --threads=1 examples/mpi_four_point_bending.jl</code></pre></div></div><h2 id="Distributed-solve-for-large-3D-systems"><a class="docs-heading-anchor" href="#Distributed-solve-for-large-3D-systems">Distributed solve for large 3D systems</a><a id="Distributed-solve-for-large-3D-systems-1"></a><a class="docs-heading-anchor-permalink" href="#Distributed-solve-for-large-3D-systems" title="Permalink"></a></h2><p>In the replicated solve, every rank factorizes the full <code>K</code> into triangular factors (<code>K = L·U</code>), so the solve cost is independent of the node count and those factors must fit within a single node&#39;s memory. In 3D the factors have far more nonzeros than <code>K</code> and dominate time and memory; for a large enough mesh they exceed one node&#39;s RAM and the solve fails.</p><p><a href="../../api/#FerriteSolidMechanics.distributed_solve"><code>distributed_solve</code></a> solves <code>K * du = residual</code> with the <a href="https://mumps-solver.org/">MUMPS</a> distributed sparse direct solver, splitting the factorization across the MPI ranks. It is a drop-in replacement for the <code>K \ residual</code> line in the Newton loop:</p><pre><code class="language-julia hljs">import MUMPS   # loads the FerriteSolidMechanics MUMPS extension; add MUMPS.jl to the environment
+
+# ... inside the Newton loop, after apply_zero!(K, residual, ch):
+u .-= distributed_solve(K, residual, MPI.COMM_WORLD)</code></pre><p>MUMPS is loaded through a package extension, so nothing is installed unless you <code>import MUMPS</code>. This is an opt-in path and Unix/cluster-only. Every rank calls it with its copy of <code>K</code> and <code>residual</code>, and all ranks receive the same <code>du</code>. Only the triangular factors are distributed; <code>K</code> itself stays replicated on every rank. The factors use far more memory than <code>K</code>, so distributing them is what saves memory. This, however, does not help once <code>K</code> itself exceeds one node&#39;s memory.</p><h3 id="When-it-pays-off"><a class="docs-heading-anchor" href="#When-it-pays-off">When it pays off</a><a id="When-it-pays-off-1"></a><a class="docs-heading-anchor-permalink" href="#When-it-pays-off" title="Permalink"></a></h3><p>In 3D the distributed solve was faster at every mesh size measured. Measured on NHR@FAU Fritz (72-core nodes), 3D hexahedral NeoHooke, each solver in its own best configuration:</p><table><tr><th style="text-align: right">Grid</th><th style="text-align: right">Replicated <code>K \ residual</code> (1 rank × 72 threads, BLAS 36)</th><th style="text-align: right"><code>distributed_solve</code> (BLAS 1)</th></tr><tr><td style="text-align: right">108k DOFs</td><td style="text-align: right">145 s, 20.7 GB</td><td style="text-align: right"><strong>25.0 s, 2.1 GB</strong> (18 ranks × 4 threads)</td></tr><tr><td style="text-align: right">273k DOFs</td><td style="text-align: right">634 s, 62.5 GB</td><td style="text-align: right"><strong>62.3 s, 3.4 GB</strong> (36 ranks × 2 threads)</td></tr></table><p>Both took nine Newton iterations and reached the same solution. Replicated factors are held per rank, so the 62.5 GB at 273k DOFs is the cost of one rank on a 256 GB node and the total scales with the rank count. At 556k DOFs one rank needed 179 GB, or 70% of a node.</p><p>In 2D the replicated solve was faster, 52 s against 62 s at 291k DOFs, so keep <code>K \ residual</code> there. These thresholds depend on element, mesh and hardware; measure on your own problem before relying on them.</p><h3 id="Launch-layout"><a class="docs-heading-anchor" href="#Launch-layout">Launch layout</a><a id="Launch-layout-1"></a><a class="docs-heading-anchor-permalink" href="#Launch-layout" title="Permalink"></a></h3><p>MUMPS wants <strong>many MPI ranks per node, each with exactly one BLAS thread</strong>, the opposite of the threaded solve (one rank per node, many threads). Its factorization is communication-heavy, so use a system MPI (for example a cluster&#39;s Open MPI module, configured as in <a href="#MPI-troubleshooting">MPI troubleshooting</a>) rather than a bundled one.</p><p>On a 72-core node, 18–36 ranks were fastest: at 273k DOFs in 3D, 36 ranks × 2 threads took 62 s and 18 ranks × 4 threads took 102 s. Concentrating the same cores into one rank costs much more: at 47k DOFs, one rank with 72 threads took 89 s against 27 s at 36 ranks × 2 threads. Critically, two nodes measured slower than one: 123 s for 36 ranks against 102 s for 18, both at 18 ranks per node, and four nodes recovered only to 76 s. The factorization communicates across the network from the second node onwards, while element assembly keeps scaling with the ranks, from 0.168 s to 0.064 s per Newton iteration over the same 18 to 72 ranks. Therefore, only add nodes when the factors no longer fit in one node&#39;s memory.</p><div class="admonition is-warning" id="Give-MUMPS-one-BLAS-thread-336254b3fb19536f"><header class="admonition-header">Give MUMPS one BLAS thread<a class="admonition-anchor" href="#Give-MUMPS-one-BLAS-thread-336254b3fb19536f" title="Permalink"></a></header><div class="admonition-body"><p>At 18 ranks, raising the BLAS thread count from 1 to 4 made the solve <strong>6.3× slower</strong>. <a href="../../api/#FerriteSolidMechanics.recommended_blas_threads"><code>recommended_blas_threads</code></a> already returns 1 for this layout, since it detects the ranks sharing the node.</p></div></div><h2 id="Scaling-notes"><a class="docs-heading-anchor" href="#Scaling-notes">Scaling notes</a><a id="Scaling-notes-1"></a><a class="docs-heading-anchor-permalink" href="#Scaling-notes" title="Permalink"></a></h2><p>The default <code>density = 4</code> configuration has 160 cells. For <code>density = d</code>, the mesh extends to <code>10d^2</code> cells. Increase <code>density</code> substantially before timing parallel runs, and set <code>vtk = nothing</code> to avoid stress-output and filesystem costs.</p><p><code>density = 224</code>, <code>447</code> and <code>894</code> give 1.0M, 4.0M and 16.0M DOFs. All three ran on one node with <code>K \ residual</code>, in 7.4 s, 30 s and 154 s, at 6.4 GB, 21.9 GB and 95 GB per rank with <code>Hooke</code> over one load step. The rank count has to fall as the mesh grows, here to 9, 4 and 1, because every rank holds its own factorization. At 16.0M DOFs <code>distributed_solve</code> exceeded the node at 18 ranks instead, each of them holding a 4.3 GB copy of <code>K</code> before its share of the factorization. The script prints a synchronized elapsed wall time at the very end on rank 0.</p><p>Compare pure threading, pure MPI, and hybrid approaches on the target machine; see <a href="#What-MPI-changes">What MPI changes</a> for what does and does not get distributed.</p><h2 id="Running-locally-and-on-clusters"><a class="docs-heading-anchor" href="#Running-locally-and-on-clusters">Running locally and on clusters</a><a id="Running-locally-and-on-clusters-1"></a><a class="docs-heading-anchor-permalink" href="#Running-locally-and-on-clusters" title="Permalink"></a></h2><p>For a minimal run without <code>mpiexec</code> and without VTK output, include the script and call <code>main</code> with small settings:</p><pre><code class="language-sh hljs">julia --project=. --threads=1 -e &quot;include(ARGS[1]); main(; density=1, load_steps=1, hold_steps=0, recover_steps=0, vtk=nothing)&quot; examples/mpi_four_point_bending.jl</code></pre><p>In the following, for running/timing without VTK and stress output, add <code>-e &quot;include(ARGS[1]); main(; vtk=nothing)&quot;</code> directly before <code>examples/mpi_four_point_bending.jl</code>.</p><p>On a single shared-memory node, consider timing one Julia process with several threads, since this assembles in parallel but solves the Newton system only once instead of once per MPI rank:</p><pre><code class="language-sh hljs">julia --project=. --threads=8 examples/mpi_four_point_bending.jl</code></pre><p>For MPI, start with one Julia thread per rank (see <a href="#MPI-troubleshooting">MPI troubleshooting</a> if you encounter issues):</p><pre><code class="language-sh hljs">mpiexec -n 8 julia --project=. --threads=1 examples/mpi_four_point_bending.jl</code></pre><p>Hybrid MPI/threading is supported: each MPI rank uses its Julia threads to assemble its assigned cells in parallel (see <a href="../../concepts/#Threading-and-MPI">Threading and MPI</a> for the exact ownership rule). Keep <code>number_of_ranks * threads_per_rank</code> within the allocated CPU count:</p><pre><code class="language-sh hljs">mpiexec -n 4 julia --project=. --threads=2 examples/mpi_four_point_bending.jl</code></pre><h3 id="SLURM-launch"><a class="docs-heading-anchor" href="#SLURM-launch">SLURM launch</a><a id="SLURM-launch-1"></a><a class="docs-heading-anchor-permalink" href="#SLURM-launch" title="Permalink"></a></h3><p>On SLURM, submit the <a href="#SLURM-submission-script">SLURM submission script</a> from the repository root:</p><pre><code class="language-sh hljs">sbatch examples/submit_four_point_bending.sh</code></pre><p>The submission script was tested on the <a href="https://hpc.fau.de/">NHR@FAU</a> clusters. It loads Open MPI and hwloc, configures MPI.jl for the loaded system MPI, instantiates the project, and runs <code>examples/mpi_four_point_bending.jl</code> with <code>srun</code>. The default <code>srun</code> MPI plugin is <code>pmix_v3</code>; set <code>SRUN_MPI_TYPE</code> to another value from <code>srun --mpi=list</code> if your cluster requires it. The <a href="#SLURM-submission-script">SLURM submission script</a> disables VTK output in the final <code>srun</code> command with <code>-e &#39;include(ARGS[1]); main(; vtk=nothing)&#39;</code>. Remove the <code>-e ...</code> part to write PVD/VTU output, but then ensure <code>WriteVTK.jl</code> is available, e.g., with <code>julia --project=. -e &#39;using Pkg; Pkg.add(&quot;WriteVTK&quot;)&#39;</code>. Adjust the <code>#SBATCH</code> partition, task count, wall time, CPU layout, and <code>module load</code> line for your SLURM cluster before running.</p><h2 id="SLURM-submission-script"><a class="docs-heading-anchor" href="#SLURM-submission-script">SLURM submission script</a><a id="SLURM-submission-script-1"></a><a class="docs-heading-anchor-permalink" href="#SLURM-submission-script" title="Permalink"></a></h2><p>The submission script is rendered from <code>examples/submit_four_point_bending.sh</code>:</p><pre><code class="language-sh hljs">#!/bin/bash -l
+
+#SBATCH --partition=singlenode
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=36
+#SBATCH --cpus-per-task=1
+#SBATCH --time=01:00:00
+#SBATCH --export=ALL
+#SBATCH --job-name=fm_4pb_mpi
+#SBATCH --output=examples/results/mpi_four_point_bending/slurm-%j.out
+#SBATCH --error=examples/results/mpi_four_point_bending/slurm-%j.err
+
+set -euo pipefail
+
+module load openmpi hwloc
+
+export UCX_ERROR_SIGNALS=&quot;SIGILL,SIGBUS,SIGFPE&quot;
+SRUN_MPI_TYPE=&quot;${SRUN_MPI_TYPE:-pmix_v3}&quot;
+
+mkdir -p examples/results/mpi_four_point_bending
+
+UCX_NET_DEVICES=none julia --project=. -e &#39;using Pkg; Pkg.add(&quot;MPIPreferences&quot;); using MPIPreferences; MPIPreferences.use_system_binary()&#39;
+julia --project=. -e &#39;using Pkg; Pkg.resolve(); Pkg.instantiate(); Pkg.precompile()&#39;
+
+srun --mpi=&quot;${SRUN_MPI_TYPE}&quot; julia --project=. --threads=&quot;${SLURM_CPUS_PER_TASK:-1}&quot; -e &#39;include(ARGS[1]); main(; vtk=nothing)&#39; examples/mpi_four_point_bending.jl
+</code></pre><h2 id="Plain-program"><a class="docs-heading-anchor" href="#Plain-program">Plain program</a><a id="Plain-program-1"></a><a class="docs-heading-anchor-permalink" href="#Plain-program" title="Permalink"></a></h2><p>The full script is rendered from <code>examples/mpi_four_point_bending.jl</code>:</p><pre><code class="language-julia hljs">using Ferrite
+using FerriteSolidMechanics
+using LinearAlgebra
+using MPI
+
+&quot;&quot;&quot;
+    run_mpi_four_point_bending(; kwargs...)
+
+Run a 2D plane strain four-point bending example.
+
+The same file can be launched directly with `julia --project=.` or through
+MPI/SLURM with `srun julia --project=.`. All ranks assemble and solve the
+same global system; FerriteSolidMechanics partitions element work internally once
+MPI is initialized. If MPI has not been initialized, the function runs as a
+single sequential rank. Rank 0 writes the PVD/VTU output.
+&quot;&quot;&quot;
+function run_mpi_four_point_bending(;
+    density::Int=4,              # mesh density: nx=10*density, ny=density
+    beam_length::Float64=10.0,   # beam length L
+    beam_height::Float64=1.0,    # beam height H
+    load_pressure::Float64=0.4,  # downward traction magnitude on each loaded top segment
+    load_steps::Int=120,         # ramp steps from zero to full load
+    hold_steps::Int=80,          # steps held at full load
+    recover_steps::Int=80,       # zero-load recovery steps after immediate unload
+    dt::Float64=0.05,            # time step size passed to the material
+    max_newton::Int=25,          # maximum Newton iterations per step
+    newton_tol::Float64=1e-7,    # relative Newton residual tolerance
+    output_every::Int=1,         # write every Nth converged step plus the final step
+    vtk::Union{String,Nothing}=joinpath(@__DIR__, &quot;results&quot;, &quot;mpi_four_point_bending&quot;, &quot;four_point_bending&quot;), # nothing to disable VTK
+)
+    density &gt;= 1 || throw(ArgumentError(&quot;density must be &gt;= 1&quot;))
+    beam_length &gt; 0 || throw(ArgumentError(&quot;beam_length must be &gt; 0&quot;))
+    beam_height &gt; 0 || throw(ArgumentError(&quot;beam_height must be &gt; 0&quot;))
+    load_pressure &gt;= 0 || throw(ArgumentError(&quot;load_pressure must be &gt;= 0&quot;))
+    load_steps &gt;= 1 || throw(ArgumentError(&quot;load_steps must be &gt;= 1&quot;))
+    hold_steps &gt;= 0 || throw(ArgumentError(&quot;hold_steps must be &gt;= 0&quot;))
+    recover_steps &gt;= 0 || throw(ArgumentError(&quot;recover_steps must be &gt;= 0&quot;))
+    dt &gt; 0 || throw(ArgumentError(&quot;dt must be &gt; 0&quot;))
+    max_newton &gt;= 1 || throw(ArgumentError(&quot;max_newton must be &gt;= 1&quot;))
+    newton_tol &gt; 0 || throw(ArgumentError(&quot;newton_tol must be &gt; 0&quot;))
+    output_every &gt;= 1 || throw(ArgumentError(&quot;output_every must be &gt;= 1&quot;))
+
+    rank = _example_mpi_rank()
+    nranks = _example_mpi_size()
+    _example_mpi_barrier()
+    elapsed_ns = time_ns()
+
+    nx = 10 * density
+    ny = density
+    grid = generate_grid(Quadrilateral, (nx, ny), Vec(0.0, 0.0), Vec(beam_length, beam_height))
+
+    hx = beam_length / nx
+    half_segment = max(1.01 * hx, 0.025 * beam_length)
+    x_support_left = 0.10 * beam_length
+    x_support_right = 0.90 * beam_length
+    x_load_left = 0.30 * beam_length
+    x_load_right = 0.70 * beam_length
+
+    on_bottom_segment(x, x0) = isapprox(x[2], 0.0; atol=1e-10) &amp;&amp; abs(x[1] - x0) &lt;= half_segment
+    on_top_segment(x, x0) = isapprox(x[2], beam_height; atol=1e-10) &amp;&amp; abs(x[1] - x0) &lt;= half_segment
+    addfacetset!(grid, &quot;support_left&quot;, x -&gt; on_bottom_segment(x, x_support_left))
+    addfacetset!(grid, &quot;support_right&quot;, x -&gt; on_bottom_segment(x, x_support_right))
+    addfacetset!(grid, &quot;load_left&quot;, x -&gt; on_top_segment(x, x_load_left))
+    addfacetset!(grid, &quot;load_right&quot;, x -&gt; on_top_segment(x, x_load_right))
+
+    for name in (&quot;support_left&quot;, &quot;support_right&quot;)
+        isempty(getfacetset(grid, name)) &amp;&amp; error(&quot;facetset &#39;$name&#39; is empty; increase support segment width or adjust mesh density&quot;)
+    end
+
+    interpolation = Lagrange{RefQuadrilateral,1}()^2
+    dh = DofHandler(grid)
+    add!(dh, :u, interpolation)
+    close!(dh)
+
+    ch = ConstraintHandler(dh)
+    add!(ch, Dirichlet(:u, getfacetset(grid, &quot;support_left&quot;), (x, t) -&gt; [0.0, 0.0], [1, 2]))
+    add!(ch, Dirichlet(:u, getfacetset(grid, &quot;support_right&quot;), (x, t) -&gt; [0.0], [2]))
+    close!(ch)
+
+    material = PlaneStrain(VEVP_Zhao2021_AD(5.0, 20.0, 6, 0.0, 0.0, 283.0, 18.51, 0.1421, 0.6152, 3.0, 3.0, 0.0, 0.0, 283.0))
+    assembler = create_assembler(material, dh, ch; quadrature_order=2)
+
+    # The load function&#39;s second argument is the value passed to external_forces!,
+    # either a load factor or physical time; x is the spatial coordinate.
+    lh = LoadHandler(assembler)
+    for name in (&quot;load_left&quot;, &quot;load_right&quot;)
+        add!(lh, Traction(name, (x, factor) -&gt; Vec(0.0, -load_pressure * factor)))
+    end
+    close!(lh)
+
+    u = zeros(ndofs(dh))
+    apply!(u, ch)
+
+    f_ext = external_forces!(lh, 0.0)
+    f_int = zeros(ndofs(dh))
+    residual = zeros(ndofs(dh))
+
+    output_dir = vtk === nothing ? nothing : dirname(vtk)
+    pvd = nothing
+    history_io = nothing
+    if rank == 0 &amp;&amp; vtk !== nothing
+        Base.invokelatest(_fpb_ensure_writevtk_loaded)
+        mkpath(output_dir)
+        pvd = Base.invokelatest(_fpb_open_pvd, vtk)
+        history_io = open(joinpath(output_dir, &quot;history.txt&quot;), &quot;w&quot;)
+        println(history_io, &quot;step,time,load_factor,min_uy,max_uy,residual_norm,newton_iterations&quot;)
+    end
+
+    write_output_step!(pvd, history_io, rank, 0, 0.0, 0.0, dh, grid, assembler, u, f_int, f_ext, 0.0, 0, vtk)
+
+    load_profile = vcat(
+        collect(range(1.0 / load_steps, 1.0; length=load_steps)),
+        fill(1.0, hold_steps),
+        [0.0],
+        fill(0.0, recover_steps),
+    )
+
+    rank == 0 &amp;&amp; println(
+        &quot;MPI four-point bending: density=$density, cells=$(getncells(grid)), dofs=$(ndofs(dh)), &quot;,
+        &quot;ranks=$nranks, steps=$(length(load_profile))&quot;,
+    )
+
+    min_uy0, max_uy0 = nodal_uy_extrema(dh, u)
+    min_uy_history = Float64[min_uy0]
+    max_uy_history = Float64[max_uy0]
+    residual_history = Float64[0.0]
+    iteration_history = Int[0]
+
+    # Give the replicated K \ residual solve its own BLAS threads; returns 1 in 2D (no-op), ncores in 3D.
+    LinearAlgebra.BLAS.set_num_threads(recommended_blas_threads(dh))
+
+    for (step, load_factor) in enumerate(load_profile)
+        # External loads do not depend on u, so they are assembled only initially per step
+        f_ext = external_forces!(lh, load_factor)
+
+        converged = false
+        final_residual_norm = Inf
+        final_iter = 0
+
+        for iter in 1:max_newton
+            K, f_int_step = stiffness_matrix(assembler, u; dt=dt)
+            copyto!(f_int, f_int_step)
+            residual .= f_int .- f_ext
+            apply_zero!(K, residual, ch)
+            final_residual_norm = norm(residual)
+            final_iter = iter
+
+            threshold = newton_tol * max(norm(f_ext), 1.0)
+            if final_residual_norm &lt;= threshold
+                converged = true
+                break
+            end
+
+            u .-= K \ residual
+            # Large 3D systems only (Unix/cluster): split the factorization across ranks.
+            # Add MUMPS.jl to the env, `import MUMPS` once at the top, and swap the line above for:
+            #   u .-= distributed_solve(K, residual, MPI.COMM_WORLD)
+            # Use instead of the BLAS tuning above, not with it. See the tutorial&#39;s distributed-solve section.
+        end
+
+        converged || error(&quot;Newton did not converge at step $step, load_factor=$load_factor, norm=$final_residual_norm&quot;)
+        update_states!(assembler)
+
+        min_uy, max_uy = nodal_uy_extrema(dh, u)
+        push!(min_uy_history, min_uy)
+        push!(max_uy_history, max_uy)
+        push!(residual_history, final_residual_norm)
+        push!(iteration_history, final_iter)
+
+        if iszero(step % output_every) || step == length(load_profile)
+            write_output_step!(pvd, history_io, rank, step, step * dt, load_factor, dh, grid, assembler, u, f_int, f_ext, final_residual_norm, final_iter, vtk)
+        end
+
+        rank == 0 &amp;&amp; println(
+            &quot;  step $(lpad(step, 4)): load=$(round(load_factor; digits=4)), &quot;,
+            &quot;iters=$final_iter, |r|=$(round(final_residual_norm; sigdigits=4)), &quot;,
+            &quot;min uy=$(round(min_uy_history[end]; sigdigits=5))&quot;,
+        )
+    end
+
+    if rank == 0 &amp;&amp; vtk !== nothing
+        Base.invokelatest(_fpb_close_pvd, pvd)
+        close(history_io)
+        println(&quot;Wrote $(vtk).pvd&quot;)
+        println(&quot;Wrote $(joinpath(output_dir, &quot;history.txt&quot;))&quot;)
+    end
+
+    _example_mpi_barrier()
+    elapsed_s = (time_ns() - elapsed_ns) / 1.0e9
+    if rank == 0
+        println(&quot;Peak downward displacement: $(minimum(min_uy_history))&quot;)
+        println(&quot;Residual downward displacement after recovery: $(min_uy_history[end])&quot;)
+        println(&quot;Elapsed wall time: $(round(elapsed_s; digits=3)) s (ranks=$nranks, threads=$(Threads.nthreads()))&quot;)
+    end
+
+    return (u=u, grid=grid, dh=dh, ch=ch, assembler=assembler, load_profile=load_profile,
+    min_uy_history=min_uy_history, max_uy_history=max_uy_history,
+    residual_history=residual_history, iteration_history=iteration_history, elapsed_s=elapsed_s)
+end
+
+function _fpb_ensure_writevtk_loaded()
+    try
+        @eval using WriteVTK
+    catch
+        throw(ArgumentError(&quot;VTK output requires WriteVTK.jl in the active environment&quot;))
+    end
+    return nothing
+end
+
+function _example_mpi_rank()
+    return MPI.Initialized() &amp;&amp; !MPI.Finalized() ? MPI.Comm_rank(MPI.COMM_WORLD) : 0
+end
+
+function _example_mpi_size()
+    return MPI.Initialized() &amp;&amp; !MPI.Finalized() ? MPI.Comm_size(MPI.COMM_WORLD) : 1
+end
+
+function _example_mpi_barrier()
+    MPI.Initialized() &amp;&amp; !MPI.Finalized() &amp;&amp; MPI.Barrier(MPI.COMM_WORLD)
+    return nothing
+end
+
+function write_output_step!(
+    pvd, history_io, rank::Int, step::Int, step_time::Float64, load_factor::Float64,
+    dh, grid, assembler, u, f_int, f_ext, residual_norm::Float64, newton_iterations::Int,
+    vtk::Union{String,Nothing},
+)
+    vtk === nothing &amp;&amp; return
+    # compute_stresses is collective: every rank must call it before the rank-0 guard.
+    stresses = compute_stresses(assembler, u)
+    rank == 0 || return
+
+    stress_components = cell_average_stress_components(stresses, getncells(grid))
+    vtk_path = &quot;$(vtk)_$(lpad(step, 5, &#39;0&#39;))&quot;
+    Base.invokelatest(
+        _fpb_write_vtk_step!, pvd, dh, grid, u, f_int, f_ext, stress_components, load_factor, step_time, vtk_path,
+    )
+
+    min_uy, max_uy = nodal_uy_extrema(dh, u)
+    println(
+        history_io,
+        step, &quot;,&quot;, step_time, &quot;,&quot;, load_factor, &quot;,&quot;,
+        min_uy, &quot;,&quot;, max_uy, &quot;,&quot;,
+        residual_norm, &quot;,&quot;, newton_iterations,
+    )
+    flush(history_io)
+    return nothing
+end
+
+# Internal helpers: called via invokelatest because WriteVTK is loaded at runtime.
+_fpb_open_pvd(vtk) = paraview_collection(vtk)
+_fpb_close_pvd(pvd) = vtk_save(pvd)
+
+function _fpb_write_vtk_step!(pvd, dh, grid, u, f_int, f_ext, stress_components, load_factor, step_time, path)
+    sigma_xx, sigma_yy, sigma_xy, sigma_vm = stress_components
+    VTKGridFile(path, dh) do vtk_file
+        write_solution(vtk_file, dh, u)
+        write_solution(vtk_file, dh, f_int, &quot;f_int&quot;)
+        write_solution(vtk_file, dh, f_ext, &quot;f_ext&quot;)
+        write_cell_data(vtk_file, sigma_xx, &quot;sigma_xx_cellavg&quot;)
+        write_cell_data(vtk_file, sigma_yy, &quot;sigma_yy_cellavg&quot;)
+        write_cell_data(vtk_file, sigma_xy, &quot;sigma_xy_cellavg&quot;)
+        write_cell_data(vtk_file, sigma_vm, &quot;sigma_vm_2d_cellavg&quot;)
+        write_cell_data(vtk_file, fill(load_factor, getncells(grid)), &quot;load_factor&quot;)
+        for name in (&quot;support_left&quot;, &quot;support_right&quot;, &quot;load_left&quot;, &quot;load_right&quot;)
+            Ferrite.write_facetset(vtk_file, grid, name)
+        end
+        pvd[step_time] = vtk_file
+    end
+    return nothing
+end
+
+function cell_average_stress_components(stresses, ncells::Int)
+    sigma_xx = Vector{Float64}(undef, ncells)
+    sigma_yy = Vector{Float64}(undef, ncells)
+    sigma_xy = Vector{Float64}(undef, ncells)
+    sigma_vm = Vector{Float64}(undef, ncells)
+
+    for cell in 1:ncells
+        sxx = 0.0
+        syy = 0.0
+        sxy = 0.0
+        for qp in axes(stresses, 1)
+            sigma = stresses[qp, cell]
+            sxx += sigma[1, 1]
+            syy += sigma[2, 2]
+            sxy += sigma[1, 2]
+        end
+        nqp = size(stresses, 1)
+        sxx /= nqp
+        syy /= nqp
+        sxy /= nqp
+
+        sigma_xx[cell] = sxx
+        sigma_yy[cell] = syy
+        sigma_xy[cell] = sxy
+        sigma_vm[cell] = sqrt(max(sxx^2 - sxx * syy + syy^2 + 3.0 * sxy^2, 0.0))
+    end
+
+    return sigma_xx, sigma_yy, sigma_xy, sigma_vm
+end
+
+nodal_uy_extrema(dh, u) = extrema(v[2] for v in evaluate_at_grid_nodes(dh, u, :u))
+
+function main(; kwargs...)
+    started_mpi = false
+    if !MPI.Initialized()
+        MPI.Init()
+        started_mpi = true
+    end
+
+    try
+        run_mpi_four_point_bending(; kwargs...)
+    finally
+        if MPI.Initialized() &amp;&amp; !MPI.Finalized()
+            MPI.Barrier(MPI.COMM_WORLD)
+        end
+        started_mpi &amp;&amp; !MPI.Finalized() &amp;&amp; MPI.Finalize()
+    end
+end
+
+if abspath(PROGRAM_FILE) == @__FILE__
+    main()
+end</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../adaptive_time_stepping/">« Adaptive time stepping</a><a class="docs-footer-nextpage" href="../../concepts/">Concepts »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Sunday 2 August 2026 22:04">Sunday 2 August 2026</span>. Using Julia version 1.12.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
