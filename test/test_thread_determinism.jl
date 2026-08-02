@@ -5,7 +5,9 @@ using Test
 # elsewhere in this suite stay single-task even at -t8
 
 const WORKER = joinpath(@__DIR__, "thread_determinism_worker.jl")
-const PROJECT = dirname(@__DIR__)
+# The active project, not the repo root: under `Pkg.test` the suite runs in a
+# sandbox environment, and the worker needs the same one to resolve test deps.
+const PROJECT = dirname(Base.active_project())
 
 function run_worker(nthreads::Int)
     cmd = `$(Base.julia_cmd()) --project=$PROJECT --threads=$nthreads --startup-file=no $WORKER`

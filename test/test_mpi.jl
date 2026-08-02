@@ -10,7 +10,9 @@ using LinearAlgebra
 # so the reduction adds exact zeros. External loads are replicated, never reduced
 
 const MPI_WORKER = joinpath(@__DIR__, "mpi_worker.jl")
-const MPI_PROJECT = dirname(@__DIR__)
+# The active project, not the repo root: under `Pkg.test` the suite runs in a
+# sandbox environment, and the ranks need the same one to resolve test deps.
+const MPI_PROJECT = dirname(Base.active_project())
 
 function mpiexec_available()
     try
