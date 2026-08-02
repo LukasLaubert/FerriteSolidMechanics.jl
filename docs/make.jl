@@ -9,7 +9,7 @@ makedocs(;
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
         canonical="https://LukasLaubert.github.io/FerriteSolidMechanics.jl",
-        edit_link="master",
+        edit_link="main",
         repolink="https://github.com/LukasLaubert/FerriteSolidMechanics.jl",
         collapselevel=1,
     ),
@@ -49,6 +49,6 @@ makedocs(;
 
 deploydocs(;
     repo="github.com/LukasLaubert/FerriteSolidMechanics.jl",
-    devbranch="master",
+    devbranch="main",
     push_preview=true,
 )
