@@ -155,7 +155,7 @@ function run_mpi_four_point_bending(;
             # Large 3D systems only (Unix/cluster): split the factorization across ranks.
             # Add MUMPS.jl to the env, `import MUMPS` once at the top, and swap the line above for:
             #   u .-= distributed_solve(K, residual, MPI.COMM_WORLD)
-            # Use instead of the BLAS tuning above, not with it. See the tutorial's distributed-solve section.
+            # Use instead of the BLAS tuning above, not with it. See the tutorial's distributed solve section.
         end
 
         converged || error("Newton did not converge at step $step, load_factor=$load_factor, norm=$final_residual_norm")

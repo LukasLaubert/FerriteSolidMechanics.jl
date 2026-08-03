@@ -125,18 +125,9 @@ function run_cantilever_beam_dma(;
     pvd !== nothing && Base.invokelatest(_dma_close_pvd, pvd)
 
     stresses = compute_stresses(assembler, u)
-    return (
-        u=u,
-        stresses=stresses,
-        grid=grid,
-        dh=dh,
-        ch=ch,
-        assembler=assembler,
-        converged_steps=converged_steps,
-        history_t=history_t,
-        history_uy=history_uy,
-        history_fy=history_fy,
-    )
+    return (u=u, stresses=stresses, grid=grid, dh=dh, ch=ch, assembler=assembler,
+        converged_steps=converged_steps, history_t=history_t, history_uy=history_uy,
+        history_fy=history_fy)
 end
 
 function _dma_ensure_writevtk_loaded()
@@ -193,52 +184,17 @@ function _plot_results_impl(result, outdir)
     fy = result.history_fy
 
     # --- Panel 1: Tip displacement vs time ---
-    p1 = plot(
-        t, uy,
-        linewidth=2,
-        color=:royalblue,
-        xlabel="Time",
-        ylabel="Tip u_y",
-        title="Tip Displacement",
-        legend=false,
-        marker=:circle,
-        markersize=3,
-    )
+    p1 = plot(t, uy, linewidth=2, color=:royalblue, xlabel="Time", ylabel="Tip u_y", title="Tip Displacement", legend=false, marker=:circle, markersize=3)
 
     # --- Panel 2: Reaction force vs time ---
-    p2 = plot(
-        t, fy,
-        linewidth=2,
-        color=:firebrick,
-        xlabel="Time",
-        ylabel="Reaction F_y",
-        title="Reaction Force",
-        legend=false,
-        marker=:diamond,
-        markersize=3,
-    )
+    p2 = plot(t, fy, linewidth=2, color=:firebrick, xlabel="Time", ylabel="Reaction F_y", title="Reaction Force", legend=false, marker=:diamond, markersize=3)
 
     # --- Panel 3: Hysteresis loop (F vs u) ---
     # Close the loop by prepending the origin
-    p3 = plot(
-        vcat(0.0, uy),
-        vcat(0.0, fy),
-        linewidth=2,
-        color=:darkgreen,
-        xlabel="Tip u_y",
-        ylabel="Reaction F_y",
-        title="Hysteresis Loop",
-        legend=false,
-        marker=:auto,
-        markersize=2,
-    )
+    p3 = plot(vcat(0.0, uy), vcat(0.0, fy), linewidth=2, color=:darkgreen, xlabel="Tip u_y", ylabel="Reaction F_y", title="Hysteresis Loop", legend=false, marker=:auto, markersize=2)
 
     # --- Compose figure ---
-    plt = plot(p1, p2, p3,
-        layout=(3, 1),
-        size=(900, 900),
-        dpi=150,
-    )
+    plt = plot(p1, p2, p3, layout=(3, 1), size=(900, 900), dpi=150)
 
     mkpath(outdir)
     outpath = joinpath(outdir, "cantilever_dma.png")

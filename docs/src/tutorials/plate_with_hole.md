@@ -103,6 +103,8 @@ For strain rate-dependent models, this is the physical time increment.
 As `NeoHooke` is rate-independent, using `dt = 1.0 / load_steps` is an arbitrary choice.
 
 `update_states!(assembler)` is called after the load step has converged, which commits the internal material states at each quadrature point.
+For the stateless `NeoHooke` used here this is a no-op: `NeoHooke` carries no internal history, so `update_state!` on its `NoState()` does nothing.
+The call is kept because it is required for history-bearing models such as `J2Plasticity`, which can be swapped in without changing the loop.
 
 ## Postprocessing
 

@@ -27,7 +27,7 @@ The sections below present the measurements behind these recommendations.
 
 ## How measurements were taken
 
-All benchmarks were measured on `FerriteSolidMechanics.jl v0.1.0` on the [NHR@FAU Fritz cluster](https://doc.nhr.fau.de/clusters/fritz/) (72 cores and 256 GB RAM per node, Open MPI 5.0.8, Julia 1.12):
+All benchmarks were measured on `FerriteSolidMechanics.jl v0.1.0` on the [NHR@FAU Fritz cluster](https://doc.nhr.fau.de/clusters/fritz/) (72 cores and 256 GB RAM per node, Open MPI 5.0.8, Julia 1.12, `Ferrite.jl v1.5.0`):
 `NeoHooke` was used for 3D solver benchmarks, while `VEVP_Zhao2021_AD` was used for 2D benchmarks and assembly-cost comparisons.
 Every grid uses linear (Q1) elements at `quadrature_order=2`: hexahedra in 3D, quadrilaterals in 2D.
 Higher-order elements were not measured; at equal DOF count they change the sparsity of `K`, so timings and memory fits need recalibration (see [Reproducing these on your cluster](@ref reproduce)).
@@ -46,6 +46,7 @@ See [Reproducing these on your cluster](@ref reproduce) to measure it for your s
 ## Choosing the linear solver
 
 Every rank assembles its own cells, then the tangent is reduced so that all ranks hold the full `K`.
+On a single rank, whether or not MPI is initialized, that process assembles all cells and the reduction is skipped.
 The two solvers differ in how the linear solve is performed:
 
 - **`K \ residual`**: every rank solves the whole system independently, allocating memory for a complete matrix factorization.
@@ -108,21 +109,19 @@ Doubling the DOFs of a 3D mesh increases memory requirements by approximately 2.
 | `distributed_solve`, per rank | 1.5 GB | 2.1 GB | 3.4 GB | – |
 
 The predicted peak memory stays within 15% of every measured point, over 2.2k to 556k DOFs in 3D and 8k to 2.0M in 2D.
-Memory still grows as $\mathcal{O}(\text{dofs}^{1.09})$ an order of magnitude beyond that range, as [Large meshes](@ref) shows.
+In 2D, the exponent $\mathcal{O}(\text{dofs}^{1.09})$ still holds an order of magnitude beyond that range, as [Large meshes](@ref) shows.
 
-This leads to two practical implications for job planning.
+Two corrections translate the per-rank estimate into a per-node memory budget.
 
-Running multiple ranks multiplies total memory usage under `K \ residual`.
+The estimate covers one factorization copy, and under `K \ residual` every rank holds its own.
 `J2Plasticity` at 47k DOFs measured ~10 GB per rank, so 36 ranks would require ~360 GB and therefore not survive on a 256 GB node.
 
-[`estimated_replicated_memory_gb`](@ref) is scaled to `NeoHooke` over three load steps.
-Two factors raise the peak memory of a rank above this estimate:
-
-- The material, at the same number of load steps: measurements showed 0.7× (`Hooke`) to 1.5× (`VEVP_MOAMMM`) of `NeoHooke`. They differ in history state per quadrature point and in Newton iterations per load step.
-- The number of load steps: `NeoHooke` at 47k DOFs measured 7.1 GB over three load steps, 9.3 GB over six (1.3×) and 11.0 GB over twelve (1.55×), then 13.4 and 16.3 GB in two repeats at 24 steps and 14.0 and 18.7 GB at 48. Peak memory keeps growing with the run, and repeats of the same run differ by up to 1.3×, because the recorded peak depends on when the garbage collector happens to run.
+[`estimated_replicated_memory_gb`](@ref) is further scaled to `NeoHooke` over three load steps, and two factors raise the peak memory of a rank above it:
+- The material, at the same number of load steps: measurements showed 0.7× (`Hooke`) to 1.5× (`VEVP_MOAMMM`) of `NeoHooke`, excluding `VEVP_Zhao2021_AT` at 9× (below). The models differ in history state per quadrature point and in Newton iterations per load step.
+- The number of load steps: `NeoHooke` at 47k DOFs measured 7.1 GB over three load steps, 9.3 GB over six (1.3×), 11.0 GB over twelve (1.55×), 13.4 and 16.3 GB in two repeats at 24 steps, and 14.0 and 18.7 GB at 48. Peak memory keeps growing with the run, and repeats of the same run differ by up to 1.3×, because the recorded peak depends on when the garbage collector happens to run.
 
 Together the two factors reach 2.6× in `VEVP_MOAMMM` over twelve load steps, which measured 17.1 GB against the 6.6 GB estimated, and [`recommended_solve_settings`](@ref) allows exactly this 2.6× in its `fits` field.
-Either factor reaches that budget on its own: `NeoHooke` measured 2.5× over 48 load steps, and `VEVP_Zhao2021_AT` 9× over three, at 59.8 GB against the 6.6 GB estimated.
+Either factor reaches that budget on its own: `NeoHooke` measured 2.5× its estimate over 48 load steps, and `VEVP_Zhao2021_AT` 9× over three, at 59.8 GB against the 6.6 GB estimated.
 Based on the tests conducted, the two also stop compounding once the run is longer: at six and twelve load steps `VEVP_MOAMMM` measured 1.5× above `NeoHooke`, but at 24 load steps only 15.2 GB against 14.9 GB.
 The budget is deliberately pessimistic: one estimate per rank marked configurations as fitting that were then killed for running out of memory.
 Because of the variations found, measure the memory of a long run, or of a model with many Newton iterations per load step, directly.
@@ -347,7 +346,7 @@ In a 2D case with four retries over sixteen solves, that extra factorization cos
 
 To calibrate the memory model, compare `estimated_replicated_memory_gb(ndofs(dh), dim)` against the peak memory usage reported by your job scheduler (e.g., `MaxRSS` in SLURM's `sacct` output) for a single-rank run.
 Multiply the single-rank memory usage by the desired ranks per node to determine total node memory demands.
-Repeat this check after changing the material model, since a more expensive one raised the memory by up to 1.5× in our benchmarks.
+Repeat this check after changing the material model, since a more expensive one raised the memory by up to 1.5× in our benchmarks (`VEVP_Zhao2021_AT` reaches 9×, see [Memory](@ref)).
 Repeat it as well after lengthening the run: over the series in [Memory](@ref), `NeoHooke` at 47k DOFs rose from 7.1 GB over three load steps to 11.0 GB over twelve (1.55×) and to 14.0–18.7 GB over 48.
 
 The [MPI four-point bending](@ref) tutorial is the 2D problem measured on this page, and it includes the full runnable script.

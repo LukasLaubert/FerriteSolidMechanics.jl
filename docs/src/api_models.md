@@ -1,7 +1,7 @@
 # Material model API
 
 This page documents the constructors of the bundled material models together with the `PlaneStrain` and `PlaneStress` wrappers that embed a 3D model into a 2D analysis.
-The assembler, the load handler, the material interface, and the remaining public functions are on the [API reference](api.md) page.
+The assembler, the load handler, the material interface, and the remaining public functions are on the [General API](api.md) page.
 
 ---
 

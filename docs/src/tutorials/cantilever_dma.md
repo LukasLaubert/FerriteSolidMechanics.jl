@@ -146,7 +146,7 @@ Here, `dt` is the physical time increment of the sinusoidal loading.
 Because `VEVP_MOAMMM` is strain rate-dependent, this value enters the local viscoelastic-viscoplastic update and affects the result.
 
 The tip reaction must be read before `apply_zero!`.
-After `apply_zero!`, the constrained residual entries are overwritten to consider the Cirichlet boundary conditions and no longer contain the reaction force.
+After `apply_zero!`, the constrained residual entries are overwritten to consider the Dirichlet boundary conditions and no longer contain the reaction force.
 
 ## Postprocessing
 

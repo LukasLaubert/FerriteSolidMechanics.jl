@@ -62,7 +62,7 @@ and $\mu = E / \left[2\left[1+\nu\right]\right]$.
 For a linear elastic material the two approaches are mathematically equivalent: both use the same infinitesimal-strain stiffness, so the in-plane stresses agree to within numerical round-off (`rtol ≈ 10⁻¹⁰`) at any displacement level.
 The regression test in `test/test_dimensionality_wrappers.jl` verifies this on a single-element uniaxial load case.
 
-!!! note "Prefer `Hooke2D` for production 2D linear elasticity."
+!!! note "Prefer `Hooke2D` for production 2D linear elasticity"
     The generic wrappers always run through the nonlinear wrapper path:
     `PlaneStrain(Hooke(...))` and `PlaneStress(Hooke(...))` are treated as nonlinear by the assembler, even though the wrapped material is linear.
     This way, there's no preassembly into `K_linear`; the `PlaneStrain` / `PlaneStress` element routine is evaluated on every Newton iteration, and `PlaneStress` also solves the local out-of-plane condition.

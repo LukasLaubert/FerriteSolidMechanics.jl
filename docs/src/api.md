@@ -1,4 +1,4 @@
-# API reference
+# General API
 
 This page provides the public API for `FerriteSolidMechanics`, grouped by functionality.
 The material model constructors and the dimensionality wrappers are covered on the [Material model API](api_models.md) page.

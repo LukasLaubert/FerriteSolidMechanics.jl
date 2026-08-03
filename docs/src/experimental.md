@@ -35,7 +35,7 @@ buffer (`vars`/`vars_n`) rather than the named typed fields of the
 exported version. It follows the same constitutive equations and
 Drucker–Prager/Perzyna local solver, stores history in the original
 Fortran `STATEV`-style layout, and uses the same `Tensors.gradient` AD
-tangent. Use `VEVP_MOAMMM` for new work.
+tangent.
 
 ## `VEVP_Zhao2021_AD_Simplified`
 
@@ -87,7 +87,6 @@ mechanically from `VEPD_Detrez2010`: the Arruda–Boyce network stress is omitte
 the network parameters `n_ab` and `mu_ab` are stored but unused, and damage is
 not clamped to `1.0`. This variant also does not implement a model-specific
 `revert_state!`.
-Use it only for source comparison.
 
 ## `VEPD_Detrez2010_ClosedCVEndStep`
 

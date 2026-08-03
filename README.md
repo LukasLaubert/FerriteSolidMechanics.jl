@@ -3,7 +3,7 @@
 [![CI](https://github.com/LukasLaubert/FerriteSolidMechanics.jl/actions/workflows/ci.yml/badge.svg)](https://github.com/LukasLaubert/FerriteSolidMechanics.jl/actions/workflows/ci.yml)
 [![Documentation](https://github.com/LukasLaubert/FerriteSolidMechanics.jl/actions/workflows/docs.yml/badge.svg)](https://github.com/LukasLaubert/FerriteSolidMechanics.jl/actions/workflows/docs.yml)
 
-*A solid mechanics assembly framework and material model library for [Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl).*
+A solid mechanics assembly framework and material model library for [Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl).
 
 FerriteSolidMechanics.jl provides finite element assembly infrastructure for solid mechanics in Ferrite.jl alongside a library of ready-to-use constitutive models.
 One generic material model assembler takes care of (sub-)DOF handling, sparse assembly, threading, MPI reduction, and trial/commit state bookkeeping; a separate `LoadHandler` integrates the external loads.
@@ -12,7 +12,7 @@ Use a bundled model or implement your own constitutive law and reuse the same as
 ## Installation
 
 ```julia
-import Pkg
+using Pkg
 Pkg.add(url="https://github.com/LukasLaubert/FerriteSolidMechanics.jl")
 ```
 
@@ -28,22 +28,37 @@ add!(dh, :u, Lagrange{RefQuadrilateral, 1}()^2) # 2D displacement field, linear 
 close!(dh)
 
 ch = ConstraintHandler(dh)                      # Ferrite ConstraintHandler
-# ... add boundary conditions here ...
+add!(ch, Dirichlet(:u, getfacetset(grid, "left"), (x, t) -> [0.0, 0.0], [1, 2])) # Clamp left boundary
 close!(ch)
 
-material = PlaneStress(ArrudaBoyce(100.0, 1000.0, 7.0)) # assign a material model
-assembler = create_assembler(material, dh, ch)          # build the assembler
+material = PlaneStress(J2Plasticity(200e3, 0.3, 100.0, 1e3)) # assign a material (plane stress conditions)
+assembler = create_assembler(material, dh, ch)  # build the assembler
 
-u = zeros(ndofs(dh))                                    # initial displacement
+lh = LoadHandler(assembler)                     # external loads, same pattern as `ch`
+add!(lh, Traction("right", (x, t) -> Vec(0.0, -150.0 * t))) # define loading and direction (downward traction)
+close!(lh)
 
-K, r = stiffness_matrix(assembler, u; dt=1.0) # assemble tangent and residual (trial state)
-# ... solve the global Newton step, update u, and repeat until converged ...
+u = zeros(ndofs(dh))                            # initial displacement
+nsteps, max_newton, tol = 4, 20, 1e-8           # solution control
 
-update_states!(assembler)                     # commit the converged material state
-stresses = compute_stresses(assembler, u)     # compute stresses (postprocessing)
+for step in 1:nsteps                            # loop over load steps
+    t = step / nsteps                           # load factor, ramps from 0 to 1
+    update!(ch, t)                              # update Dirichlet BCs
+    f_ext = external_forces!(lh, t)             # update Neumann BCs
+    for _ in 1:max_newton                       # Newton loop
+        K, r = stiffness_matrix(assembler, u; dt=1.0 / nsteps) # tangent and internal residual
+        residual = r .- f_ext                   # external loads enter residual
+        apply_zero!(K, residual, ch)            # zero constrained rows/columns in K & residual
+        norm(residual) < tol && break           # stop if residual is small enough
+        u .-= K \ residual                      # linear solve & Newton update
+    end
+    update_states!(assembler)                   # commit updated material state
+end
+
+stresses = compute_stresses(assembler, u)       # compute stresses (postprocessing)
 ```
 
-[`examples/plate_with_hole_planestress.jl`](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/tutorials/plate_with_hole/) provides a complete Newton solve on a 2D plate with a hole.
+See [`examples/plate_with_hole_planestress.jl`](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/tutorials/plate_with_hole/) for a runnable script incorporating a quarter-plate-with-hole mesh, displacement-controlled loading, and a printed result summary.
 
 ## Features
 
@@ -67,12 +82,18 @@ stresses = compute_stresses(assembler, u)     # compute stresses (postprocessing
 - [In-plane wrappers](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/wrappers/): `PlaneStrain` and `PlaneStress` usage.
 - [Developer guide](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/developer_guide/): how to implement your own material model.
 - [FAQ](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/faq/): possible uncertainties and troubleshooting.
-- [API reference](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/api/): all exported functions and types.
+<details>
+<summary>API reference</summary>
+
+- [General API](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/api/): the assembler, loads, time stepping, and material interface API.
+- [Material model API](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/api_models/): constructors of the bundled material models and the in-plane wrappers.
+
+</details>
 
 ## Related packages and acknowledgements
 
 FerriteSolidMechanics.jl follows conventions established by earlier Julia packages.
-The `material_response` interface, the `AbstractMaterial` / `AbstractMaterialState` pair, and the `PlaneStrain` / `PlaneStress` wrapper names originate from [MaterialModels.jl](https://github.com/kimauth/MaterialModels.jl) (K. Auth and contributors), from which [MaterialModelsBase.jl](https://github.com/KnutAM/MaterialModelsBase.jl) (K. A. Meyer) was developed as an implementation-independent interface package; materials written for MaterialModelsBase are used here through the `FromMaterialModelsBase` wrapper.
+The `material_response` interface, the `AbstractMaterial` / `AbstractMaterialState` pair, and the `PlaneStrain` / `PlaneStress` wrapper names originate from [MaterialModels.jl](https://github.com/kimauth/MaterialModels.jl) (K. Auth and contributors), from which [MaterialModelsBase.jl](https://github.com/KnutAM/MaterialModelsBase.jl) (K. A. Meyer) was developed as an implementation-independent interface package; materials written for MaterialModelsBase can be used here through the `FromMaterialModelsBase` wrapper.
 [FerriteAssembly.jl](https://github.com/KnutAM/FerriteAssembly.jl) (K. A. Meyer) covers similar ground to the assembler and the `LoadHandler` in this package, and [FerriteDistributed.jl](https://github.com/Ferrite-FEM/FerriteDistributed.jl) is a partitioned alternative to the replicated MPI assembly used here.
 The assembler entry points, the `_assemble_element!` and `alpha_value` hooks, and that replicated MPI assembly originate from [CAPRICCIO](https://doi.org/10.5281/zenodo.18326736) (J. Roksvaag), a concurrent FE–MD coupling tool.
 The `Ψ(C)` / `constitutive_driver` convention and the element integration loops originate from [Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl)'s tutorials; per-model provenance is on the material documentation pages.

@@ -42,8 +42,10 @@ makedocs(;
         "Performance and parallel execution" => "performance.md",
         "Developer guide" => "developer_guide.md",
         "FAQ" => "faq.md",
-        "API reference" => "api.md",
-        "Material model API" => "api_models.md",
+        "API reference" => [
+            "General API" => "api.md",
+            "Material model API" => "api_models.md",
+        ],
     ],
 )
 

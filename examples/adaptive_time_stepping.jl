@@ -169,22 +169,10 @@ function run_adaptive_time_stepping(;
     pvd !== nothing && Base.invokelatest(_adaptive_close_pvd, pvd)
 
     stresses = compute_stresses(assembler, u)
-    return (
-        u=u,
-        stresses=stresses,
-        grid=grid,
-        dh=dh,
-        ch=ch,
-        assembler=assembler,
-        accepted_steps=accepted_steps,
-        rejected_steps=rejected_steps,
-        dt_decreases=dt_decreases,
-        dt_increases=dt_increases,
-        history_t=history_t,
-        history_dt=history_dt,
-        history_res=history_res,
-        history_iters=history_iters,
-    )
+    return (u=u, stresses=stresses, grid=grid, dh=dh, ch=ch, assembler=assembler,
+        accepted_steps=accepted_steps, rejected_steps=rejected_steps,
+        dt_decreases=dt_decreases, dt_increases=dt_increases, history_t=history_t,
+        history_dt=history_dt, history_res=history_res, history_iters=history_iters)
 end
 
 function _adaptive_ensure_writevtk_loaded()

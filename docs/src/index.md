@@ -16,7 +16,7 @@ using Ferrite
 using FerriteSolidMechanics
 
 # After setting up a grid and initializing Ferrite's DofHandler `dh`,
-# ConstraintHandler `ch`, and displacement vector `u`:
+# ConstraintHandler `ch`, LoadHandler `lh`, and displacement vector `u`:
 material = J2Plasticity(100.0, 0.3, 1.0, 10.0)  # assign material model
 assembler = create_assembler(material, dh, ch)  # create material assembler
 
@@ -56,7 +56,7 @@ The [Developer guide](developer_guide.md) walks through the full interface using
 | Understand the assembler, time stepping, and material states | [Concepts](concepts.md) |
 | Choose a linear solver, rank and thread layout, and BLAS threads | [Performance and parallel execution](performance.md) |
 | Add your own material model | [Developer guide](developer_guide.md) |
-| Look up the signature of a function | [API reference](@ref) |
+| Look up the signature of a function | [General API](@ref) |
 | Diagnose a behaviour you don't understand | [FAQ](faq.md) |
 | See relations to further Ferrite-based packages | [Related packages and acknowledgements](@ref) |
 
@@ -86,7 +86,7 @@ It is licensed under the MIT license (see `LICENSE` in the repository root); mat
 FerriteSolidMechanics.jl sits alongside several Julia packages for constitutive modelling and finite element assembly, and follows some conventions established by them.
 
 - [MaterialModels.jl](https://github.com/kimauth/MaterialModels.jl) (K. Auth and contributors) is a material model library without an assembly layer. Its `material_response` convention returning `(stress, tangent, new_state)`, the `AbstractMaterial`/`AbstractMaterialState` pair, and `PlaneStrain`/`PlaneStress` as dimensional wrappers are used here under the same names.
-- [MaterialModelsBase.jl](https://github.com/KnutAM/MaterialModelsBase.jl) (K. A. Meyer) is an implementation-independent interface package developed from MaterialModels.jl, with [MechanicalMaterialModels.jl](https://github.com/KnutAM/MechanicalMaterialModels.jl) as the model library built on it. The constitutive interface in FerriteSolidMechanics.jl follows the MaterialModelsBase conventions, and materials written for MaterialModelsBase can be used through the [`FromMaterialModelsBase`](@ref) wrapper.
+- [MaterialModelsBase.jl](https://github.com/KnutAM/MaterialModelsBase.jl) (K. A. Meyer) is an implementation-independent interface package developed from MaterialModels.jl, with [MechanicalMaterialModels.jl](https://github.com/KnutAM/MechanicalMaterialModels.jl) as the model library built on it. The constitutive interface in FerriteSolidMechanics.jl follows the MaterialModelsBase conventions, and models written for MaterialModelsBase can be used through the [`FromMaterialModelsBase`](@ref) wrapper.
 - [FerriteAssembly.jl](https://github.com/KnutAM/FerriteAssembly.jl) (K. A. Meyer) covers similar ground to the assembler here: a generic Ferrite assembly path over pluggable materials, with an element-level hook, `update_states!` for committing converged state, and per-task scratch buffers. Its `LoadHandler`, a container populated with `add!` and applied at a given time, is followed here under the same name. FerriteAssembly also assembles general facet contributions to the tangent and threads load assembly, neither of which FerriteSolidMechanics.jl currently does; assembly of the tangent and internal force in FerriteSolidMechanics.jl is instead MPI-parallel, with the external force vector replicated on every rank.
 - [Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl)'s hyperelasticity and von Mises plasticity tutorials are the source of the `Ψ(C)`/`constitutive_driver` convention and of the element integration loops.
 - [FerriteDistributed.jl](https://github.com/Ferrite-FEM/FerriteDistributed.jl) runs MPI by partitioning the grid and the DofHandler. FerriteSolidMechanics.jl replicates the global system on every rank and reduces it instead, which leaves the Ferrite `DofHandler` unchanged at the cost of per-rank memory; see [Performance and parallel execution](performance.md).
