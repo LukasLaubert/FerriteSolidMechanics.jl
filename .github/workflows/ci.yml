@@ -6,9 +6,13 @@ on:
       - main
       - master
   pull_request:
+  schedule:
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
 
 jobs:
   test:
+    if: github.event_name != 'schedule'
     name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.threads }} thread(s)
     runs-on: ${{ matrix.os }}
     strategy:
@@ -38,7 +42,29 @@ jobs:
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
 
+  upstream:
+    name: Ferrite master (upstream)
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ github.event_name != 'schedule' }}
+    env:
+      JULIA_NUM_THREADS: 4
+    steps:
+      - uses: actions/checkout@v7
+      - uses: julia-actions/setup-julia@v3
+        with:
+          version: '1'
+      - uses: julia-actions/cache@v3
+      - name: Test against Ferrite master
+        run: |
+          julia -e '
+          using Pkg
+          Pkg.activate(; temp=true)
+          Pkg.develop(path=pwd())
+          Pkg.add(PackageSpec(name="Ferrite", rev="master"))
+          Pkg.test("FerriteSolidMechanics")'
+
   materialmodelsbase-ext:
+    if: github.event_name != 'schedule'
     name: MaterialModelsBase extension - ubuntu-latest
     runs-on: ubuntu-latest
     continue-on-error: true
