@@ -128,6 +128,7 @@ The final cell-averaged plane stress von Mises stress field from this run is sho
 Note that plotting is not covered in this tutorial due to its focus.
 
 ![Final cell-averaged von Mises stress](../assets/plate_with_hole_final.png)
+
 **Figure 2.** *Final cell-averaged von Mises stress field.*
 
 ## Swapping the material model

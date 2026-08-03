@@ -6,7 +6,7 @@
 *A solid mechanics assembly framework and material model library for [Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl).*
 
 FerriteSolidMechanics.jl provides finite element assembly infrastructure for solid mechanics in Ferrite.jl alongside a library of ready-to-use constitutive models.
-The package takes care of DOF handling, sparse assembly, external load integration, threading, MPI reduction, and trial/commit state bookkeeping through one generic material model assembler.
+One generic material model assembler takes care of (sub-)DOF handling, sparse assembly, threading, MPI reduction, and trial/commit state bookkeeping; a separate `LoadHandler` integrates the external loads.
 Use a bundled model or implement your own constitutive law and reuse the same assembly path.
 
 ## Installation
@@ -54,6 +54,7 @@ stresses = compute_stresses(assembler, u)     # compute stresses (postprocessing
 - **External loads**: `LoadHandler` collects `BodyForce`, `Traction`, `Pressure`, and `NodalForce` entries and assembles the external force vector.
 - **2D wrappers**: `PlaneStrain` and `PlaneStress` embed a 3D material model into a 2D analysis.
 - **Distributed linear solve**: `distributed_solve` splits one factorization across MPI ranks using MUMPS, instead of every rank factorizing the whole system.
+- **Adaptive time stepping**: `TimeStepController` retries a failed material update with a smaller step size, using the recoverable failures reported by `try_stiffness_matrix`.
 - **MaterialModelsBase.jl bridge**: wrap any [MaterialModelsBase.jl](https://github.com/KnutAM/MaterialModelsBase.jl) / [MechanicalMaterialModels.jl](https://github.com/KnutAM/MechanicalMaterialModels.jl) model with `FromMaterialModelsBase` and use it like a bundled model.
 
 ## Documentation

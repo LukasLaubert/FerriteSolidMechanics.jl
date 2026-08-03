@@ -39,13 +39,13 @@ The `dt` column indicates whether the material is rate-dependent and actively us
 ## Using MaterialModelsBase.jl models
 
 FerriteSolidMechanics.jl focuses on established material models provided as a whole, but also supports modularly composed materials from the following packages by Knut Andreas Meyer (which also offer extended tooling for them, such as parameter differentiation for calibration and stress-state-driven point simulations):
-[MaterialModelsBase.jl](https://github.com/KnutAM/MaterialModelsBase.jl) specifies an interface for constitutive models, and [MechanicalMaterialModels.jl](https://github.com/KnutAM/MechanicalMaterialModels.jl) provides an existing library of material models (elasto-(visco)plasticity and viscoelasticity).
-Any material implementing this interface can be used directly through the [`FromMaterialModelsBase`](@ref) wrapper.
+[MaterialModelsBase.jl](https://github.com/KnutAM/MaterialModelsBase.jl) specifies an interface for constitutive models, and [MechanicalMaterialModels.jl](https://github.com/KnutAM/MechanicalMaterialModels.jl) provides an existing library of material models (such as elasto-(visco)plasticity and viscoelasticity).
 
-The wrapper is a thin bridge: FerriteSolidMechanics' own constitutive interface deliberately follows similar conventions.
+Any material implementing this interface can be used directly through the [`FromMaterialModelsBase`](@ref) wrapper.
+FerriteSolidMechanics' own constitutive interface deliberately follows similar conventions.
 Trial/commit state management, threaded/MPI assembly, stress output, and `try_stiffness_matrix`-based adaptive stepping (local convergence failures surface as [`MaterialModelsBaseConvergenceError`](@ref)) therefore all work as for bundled material models.
 
-The bridge targets MaterialModelsBase.jl **0.4**; a different version may require an update.
+The bridge targets MaterialModelsBase.jl 0.4; a different version may require an update.
 The extension activates when MaterialModelsBase is loaded:
 
 ```julia

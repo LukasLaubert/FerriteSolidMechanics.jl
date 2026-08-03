@@ -10,7 +10,7 @@ julia --project=. examples/cantilever_beam_dma.jl
 The direct run writes plot and VTK output.
 Install `Plots.jl` and `WriteVTK.jl` in the active environment before running it with output enabled.
 
-For a short run without plot or VTK output, start Julia with `julia --project=.` and run:
+For a short run without plot or VTK output, start Julia from the repository root with `julia --project=.` and run:
 
 ```julia
 include("examples/cantilever_beam_dma.jl")
