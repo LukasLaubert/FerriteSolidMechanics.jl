@@ -51,13 +51,13 @@ Models that should also run in 2D further implement `compute_PK1_3D` and `update
 
 The full interface is covered in the Developer Guide, including optional hooks (`set_trial!`, `copy_state!`, tangent-free `_compute_stress_qp`), when to write a custom `_assemble_element!`, and the testing and documentation requirements:
 
-- [The required interface](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/developer_guide/#The-required-interface)
-- [Custom element assembly](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/developer_guide/#Custom-element-assembly)
-- [Testing material model implementations](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/developer_guide/#Testing-material-model-implementations)
+- [The required interface](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/developer_guide/#The-required-interface)
+- [Custom element assembly](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/developer_guide/#Custom-element-assembly)
+- [Testing material model implementations](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/developer_guide/#Testing-material-model-implementations)
 
 ## Naming convention
 
-Please adhere strictly to the **[Naming conventions](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/developer_guide/#Naming-conventions)** detailed in the Developer Guide. This ensures consistent naming across material constructors, state structures, source files, and documentation pages for both canonical and specialized models.
+Please adhere strictly to the **[Naming conventions](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/developer_guide/#Naming-conventions)** detailed in the Developer Guide. This ensures consistent naming across material constructors, state structures, source files, and documentation pages for both canonical and specialized models.
 
 ## Style
 

@@ -58,11 +58,11 @@ end
 stresses = compute_stresses(assembler, u)       # compute stresses (postprocessing)
 ```
 
-See [`examples/plate_with_hole_planestress.jl`](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/tutorials/plate_with_hole/) for a runnable script incorporating a quarter-plate-with-hole mesh, displacement-controlled loading, and a printed result summary.
+See [`examples/plate_with_hole_planestress.jl`](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/tutorials/plate_with_hole/) for a runnable script incorporating a quarter-plate-with-hole mesh, displacement-controlled loading, and a printed result summary.
 
 ## Features
 
-- **[Material model catalogue](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/models/)**: linear elastic, hyperelastic, plastic, and viscoelastic-viscoplastic models. Among those are `Ogden`, `ArrudaBoyce`, `J2Plasticity`, and complex literature-specific polymer models such as `VEPD_Detrez2010`, which adds damage.
+- **[Material model catalogue](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/models/)**: linear elastic, hyperelastic, plastic, and viscoelastic-viscoplastic models. Among those are `Ogden`, `ArrudaBoyce`, `J2Plasticity`, and complex literature-specific polymer models such as `VEPD_Detrez2010`, which adds damage.
 - **Material model interface**: implement the quadrature point hook `material_response` (UMAT-like), or, for a hyperelastic model, only the strain energy density `Ψ(C)`.
 - **Element-level override**: optionally implement `_assemble_element!` (UEL-like), e.g., when the element structure itself is material-specific (hand-assembled tangent blocks, mixed or nonlocal formulations).
 - **Generic material assembler**: 2D and 3D, mixed-element grids, linear preassembly, thread parallelism, and MPI-parallel assembly.
@@ -74,19 +74,19 @@ See [`examples/plate_with_hole_planestress.jl`](https://lukaslaubert.github.io/F
 
 ## Documentation
 
-- [Material models](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/models/): catalogue of bundled models.
-- [Tutorials](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/tutorials/plate_with_hole/): 2D plate with a hole, DMA cantilever beam, adaptive time stepping, and MPI four-point bending.
-- [Concepts](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/concepts/): the assembler, the element loop, and trial/commit state management.
-- [External loads](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/loads/): `LoadHandler`, the four load types, and their placement in the Newton loop.
-- [Performance and parallel execution](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/performance/): choosing the linear solver, the rank and thread layout, BLAS threads, and memory per rank.
-- [In-plane wrappers](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/wrappers/): `PlaneStrain` and `PlaneStress` usage.
-- [Developer guide](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/developer_guide/): how to implement your own material model.
-- [FAQ](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/faq/): possible uncertainties and troubleshooting.
+- [Material models](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/models/): catalogue of bundled models.
+- [Tutorials](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/tutorials/plate_with_hole/): 2D plate with a hole, DMA cantilever beam, adaptive time stepping, and MPI four-point bending.
+- [Concepts](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/concepts/): the assembler, the element loop, and trial/commit state management.
+- [External loads](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/loads/): `LoadHandler`, the four load types, and their placement in the Newton loop.
+- [Performance and parallel execution](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/performance/): choosing the linear solver, the rank and thread layout, BLAS threads, and memory per rank.
+- [In-plane wrappers](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/wrappers/): `PlaneStrain` and `PlaneStress` usage.
+- [Developer guide](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/developer_guide/): how to implement your own material model.
+- [FAQ](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/faq/): possible uncertainties and troubleshooting.
 <details>
 <summary>API reference</summary>
 
-- [General API](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/api/): the assembler, loads, time stepping, and material interface API.
-- [Material model API](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/api_models/): constructors of the bundled material models and the in-plane wrappers.
+- [General API](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/api/): the assembler, loads, time stepping, and material interface API.
+- [Material model API](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/api_models/): constructors of the bundled material models and the in-plane wrappers.
 
 </details>
 
@@ -98,7 +98,7 @@ The `material_response` interface, the `AbstractMaterial` / `AbstractMaterialSta
 The assembler entry points, the `_assemble_element!` and `alpha_value` hooks, and that replicated MPI assembly originate from [CAPRICCIO](https://doi.org/10.5281/zenodo.18326736) (J. Roksvaag), a concurrent FE–MD coupling tool.
 The `Ψ(C)` / `constitutive_driver` convention and the element integration loops originate from [Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl)'s tutorials; per-model provenance is on the material documentation pages.
 
-The [documentation](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/dev/#Related-packages-and-acknowledgements) compares these packages in more detail.
+The [documentation](https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/#Related-packages-and-acknowledgements) compares these packages in more detail.
 
 ## License
 

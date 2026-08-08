@@ -4,7 +4,7 @@ title: "FerriteSolidMechanics.jl"
 abstract: >-
   Reusable material model interfaces and a shared finite element assembly path
   on top of Ferrite.jl. Application and research code writes the constitutive
-  model at the quadrature point (UMAT-like) level; the package owns DOF handling,
+  model at the quadrature point (UMAT-like) level; the package handles DOFs,
   sparse assembly, threading, MPI reduction, and trial/commit state updating.
 type: software
 authors:
@@ -27,4 +27,4 @@ keywords:
   - hyperelasticity
   - viscoelasticity
   - viscoplasticity
-date-released: 2026-08-02
+date-released: 2026-08-09
