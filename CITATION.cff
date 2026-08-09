@@ -6,11 +6,12 @@ abstract: >-
   A generic material assembler handles DOFs, sparse assembly, threading, MPI reduction and trial/commit state updating, so a constitutive model is written only at the quadrature point (UMAT-like) level.
   The bundled models range from linear elasticity to finite-strain hyperelastic and viscoelastic-viscoplastic laws.
 type: software
+doi: 10.5281/zenodo.21856244
 authors:
   - given-names: Lukas
     family-names: Laubert
     email: Lukas.Laubert@fau.de
-    affiliation: "Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)"
+    affiliation: "Friedrich-Alexander-Universität Erlangen-Nürnberg"
     orcid: "https://orcid.org/0009-0009-4524-2621"
 version: "0.1.0"
 license: MIT

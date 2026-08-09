@@ -1,13 +1,13 @@
 {
   "upload_type": "software",
   "title": "FerriteSolidMechanics.jl",
-  "description": "A solid mechanics assembly framework and material model library for Ferrite.jl. A generic material assembler handles DOFs, sparse assembly, threading, MPI reduction and trial/commit state updating, so a constitutive model is written only at the quadrature point (UMAT-like) level. The bundled models range from linear elasticity to finite-strain hyperelastic and viscoelastic-viscoplastic laws.",
+  "description": "A solid mechanics assembly framework and material model library for Ferrite.jl. A generic material assembler handles DOFs, sparse assembly, threading, MPI reduction and trial/commit state updating, so a constitutive model is written only at the quadrature point (UMAT-like) level. The bundled models range from linear elasticity to finite-strain hyperelastic and viscoelastic-viscoplastic laws. Source code: https://github.com/LukasLaubert/FerriteSolidMechanics.jl · Documentation: https://lukaslaubert.github.io/FerriteSolidMechanics.jl/stable/",
   "license": "MIT",
   "access_right": "open",
   "creators": [
     {
       "name": "Laubert, Lukas",
-      "affiliation": "Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)",
+      "affiliation": "Friedrich-Alexander-Universität Erlangen-Nürnberg",
       "orcid": "0009-0009-4524-2621"
     }
   ],
@@ -15,7 +15,7 @@
     {
       "name": "Zhao, Wuyang",
       "type": "Researcher",
-      "affiliation": "Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)",
+      "affiliation": "Friedrich-Alexander-Universität Erlangen-Nürnberg",
       "orcid": "0000-0002-8256-0815"
     },
     {
@@ -33,7 +33,7 @@
     {
       "name": "Pfaller, Sebastian",
       "type": "Supervisor",
-      "affiliation": "Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)",
+      "affiliation": "Friedrich-Alexander-Universität Erlangen-Nürnberg",
       "orcid": "0000-0001-8577-5048"
     }
   ],
@@ -53,6 +53,10 @@
       "identifier": "10.5281/zenodo.18326736",
       "relation": "references",
       "resource_type": "software"
+    },
+    {
+      "identifier": "https://lukaslaubert.github.io/FerriteSolidMechanics.jl/",
+      "relation": "isDocumentedBy"
     }
   ]
 }
