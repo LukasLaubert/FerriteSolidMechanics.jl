@@ -1,0 +1,58 @@
+{
+  "upload_type": "software",
+  "title": "FerriteSolidMechanics.jl",
+  "description": "A solid mechanics assembly framework and material model library for Ferrite.jl. A generic material assembler handles DOFs, sparse assembly, threading, MPI reduction and trial/commit state updating, so a constitutive model is written only at the quadrature point (UMAT-like) level. The bundled models range from linear elasticity to finite-strain hyperelastic and viscoelastic-viscoplastic laws.",
+  "license": "MIT",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "Laubert, Lukas",
+      "affiliation": "Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)",
+      "orcid": "0009-0009-4524-2621"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Zhao, Wuyang",
+      "type": "Researcher",
+      "affiliation": "Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)",
+      "orcid": "0000-0002-8256-0815"
+    },
+    {
+      "name": "Detrez, Fabrice",
+      "type": "Researcher",
+      "affiliation": "Université Gustave Eiffel",
+      "orcid": "0000-0003-4745-8054"
+    },
+    {
+      "name": "Mustafa, Mohib",
+      "type": "Researcher",
+      "affiliation": "Université de Liège",
+      "orcid": "0000-0002-1243-2324"
+    },
+    {
+      "name": "Pfaller, Sebastian",
+      "type": "Supervisor",
+      "affiliation": "Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)",
+      "orcid": "0000-0001-8577-5048"
+    }
+  ],
+  "keywords": [
+    "Julia",
+    "finite element method",
+    "constitutive modeling",
+    "material models",
+    "Ferrite.jl",
+    "continuum mechanics",
+    "hyperelasticity",
+    "viscoelasticity",
+    "viscoplasticity"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.18326736",
+      "relation": "references",
+      "resource_type": "software"
+    }
+  ]
+}

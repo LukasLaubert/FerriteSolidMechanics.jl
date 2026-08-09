@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `TimeStepController` with `accept_step!` and `reject_step!` for adaptive step sizes. `try_stiffness_matrix` reports a `LocalAssemblyFailure` raised inside a local material update as a failed step instead of throwing, and synchronizes that failure across MPI ranks.
 - `distributed_solve`, which splits one factorization of the global system across MPI ranks. Provided by the MUMPS package extension and available on Unix.
 - `LoadHandler` with the load types `BodyForce`, `Traction`, `Pressure` and `NodalForce`. `external_forces!` assembles the external force vector for a given load factor or time.
+- `FromMaterialModelsBase`, which runs a material written for MaterialModelsBase.jl or MechanicalMaterialModels.jl through the same assembly path as a bundled model. Provided by the MaterialModelsBase package extension.
 
 [Unreleased]: https://github.com/LukasLaubert/FerriteSolidMechanics.jl/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/LukasLaubert/FerriteSolidMechanics.jl/releases/tag/v0.1.0

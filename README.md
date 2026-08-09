@@ -68,7 +68,7 @@ See [`examples/plate_with_hole_planestress.jl`](https://lukaslaubert.github.io/F
 - **Generic material assembler**: 2D and 3D, mixed-element grids, linear preassembly, thread parallelism, and MPI-parallel assembly.
 - **External loads**: `LoadHandler` collects `BodyForce`, `Traction`, `Pressure`, and `NodalForce` entries and assembles the external force vector.
 - **2D wrappers**: `PlaneStrain` and `PlaneStress` embed a 3D material model into a 2D analysis.
-- **Distributed linear solve**: `distributed_solve` splits one factorization across MPI ranks using MUMPS, instead of every rank factorizing the whole system.
+- **Distributed linear solve**: `distributed_solve` splits one factorization across MPI ranks using [MUMPS](https://mumps-solver.org/), instead of every rank factorizing the whole system.
 - **Adaptive time stepping**: `TimeStepController` retries a failed material update with a smaller step size, using the recoverable failures reported by `try_stiffness_matrix`.
 - **MaterialModelsBase.jl bridge**: wrap any [MaterialModelsBase.jl](https://github.com/KnutAM/MaterialModelsBase.jl) / [MechanicalMaterialModels.jl](https://github.com/KnutAM/MechanicalMaterialModels.jl) model with `FromMaterialModelsBase` and use it like a bundled model.
 

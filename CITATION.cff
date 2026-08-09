@@ -2,10 +2,9 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it using the metadata from this file."
 title: "FerriteSolidMechanics.jl"
 abstract: >-
-  Reusable material model interfaces and a shared finite element assembly path
-  on top of Ferrite.jl. Application and research code writes the constitutive
-  model at the quadrature point (UMAT-like) level; the package handles DOFs,
-  sparse assembly, threading, MPI reduction, and trial/commit state updating.
+  A solid mechanics assembly framework and material model library for Ferrite.jl.
+  A generic material assembler handles DOFs, sparse assembly, threading, MPI reduction and trial/commit state updating, so a constitutive model is written only at the quadrature point (UMAT-like) level.
+  The bundled models range from linear elasticity to finite-strain hyperelastic and viscoelastic-viscoplastic laws.
 type: software
 authors:
   - given-names: Lukas
