@@ -9,11 +9,7 @@
 """
     FromMaterialModelsBase(material; kinematics=SmallStrain())
 
-Wrap a material implementing the
-[MaterialModelsBase.jl](https://github.com/KnutAM/MaterialModelsBase.jl)
-interface, for example a model from
-[MechanicalMaterialModels.jl](https://github.com/KnutAM/MechanicalMaterialModels.jl),
-for use everywhere a FerriteSolidMechanics `AbstractMaterial` is accepted: `create_assembler`, `stiffness_matrix`, `compute_stresses`, `update_states!`, `try_stiffness_matrix`, and so on.
+Wrap a material implementing the [MaterialModelsBase.jl](https://github.com/KnutAM/MaterialModelsBase.jl) interface, for example a model from [MechanicalMaterialModels.jl](https://github.com/KnutAM/MechanicalMaterialModels.jl), for use everywhere a FerriteSolidMechanics `AbstractMaterial` is accepted: `create_assembler`, `stiffness_matrix`, `compute_stresses`, `update_states!`, `try_stiffness_matrix`, and so on.
 
 The `kinematics` keyword declares which strain measure the wrapped material consumes, since MaterialModelsBase selects it by dispatch on the input type:
 
@@ -74,10 +70,7 @@ revert_state!(state::MMBState) = (state.current = state.previous; nothing)
 """
     MaterialModelsBaseConvergenceError(error)
 
-Recoverable [`LocalAssemblyFailure`](@ref) wrapping a
-`MaterialModelsBase.MaterialConvergenceError` thrown by a wrapped
-material's local solve, so that [`try_stiffness_matrix`](@ref) reports
-`converged = false` instead of aborting the outer solve.
+Recoverable [`LocalAssemblyFailure`](@ref) wrapping a `MaterialModelsBase.MaterialConvergenceError` thrown by a wrapped material's local solve, so that [`try_stiffness_matrix`](@ref) reports `converged = false` instead of aborting the outer solve.
 """
 struct MaterialModelsBaseConvergenceError <: LocalAssemblyFailure
     error::Exception

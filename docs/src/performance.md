@@ -15,13 +15,31 @@ We recommend to verify critical thresholds on your hardware using the procedure 
 The following summarized recommendations are based on the measurements in the bottom part of this page.
 The numbers below are for linear (Q1) elements; see [How measurements were taken](@ref) for scope.
 
-- **Solver**: Use `distributed_solve` for 3D problems (faster at every size measured, up to 10.2× at 273k DOFs). Without MUMPS, `K \ residual` on a single rank remains viable in 3D. Use `K \ residual` for 2D problems, where it led at every size measured up to 4.0M DOFs; above ~500k its lead is 1.14× to 1.31× and available memory determines the choice. See [Choosing the linear solver](@ref).
-- **Rank and thread layout**: For `distributed_solve`, use 18–36 MPI ranks with 2–4 Julia threads per rank. For `K \ residual` in 3D, use a single rank with all cores as Julia threads. In 2D with `K \ residual`, use 4–36 ranks for cheap materials, where all layouts are within 8% of each other, and 18–36 ranks for expensive materials, where the spread reaches 1.5×. See [Rank and thread layout](@ref).
-- **BLAS threads**: Set to 1 in all configurations except single-rank 3D `K \ residual`, where BLAS threading pays (measured at 36 threads on a 72-core node). Multi-threaded BLAS under `distributed_solve` caused a 6.3× slowdown. In 2D, BLAS threading degrades performance at every thread count tested. See [BLAS threads](@ref).
-- **Memory**: Under `K \ residual`, multiply [`estimated_replicated_memory_gb`](@ref) by the ranks per node and compare against node RAM, or read the `fits` field of [`recommended_solve_settings`](@ref), which does exactly that. Both are scaled to `NeoHooke` over three load steps; hence `fits` budgets 2.6× for a more expensive material on a longer run. An expensive model (`VEVP_Zhao2021_AT` measured 9×) or a long run (`NeoHooke` measured 2.5× over 48 load steps) reaches or exceeds that budget on its own, so measure yours before committing to a large job. See [Memory](@ref).
-- **Large meshes**: In 2D, 16M DOFs solve on one node in 154 s at 95 GB, with the rank count lowered so the replicated copies fit. In 3D, the factorization outgrows the memory of 8 nodes somewhere above 1M DOFs. See [Large meshes](@ref).
-- **Multi-node scaling**: Stay on a single node while memory permits; the best single-node layout beat every multi-node layout measured, at 273k and at 985k DOFs in 3D. Expand only when factorization memory exceeds single-node capacity. See [Scaling across multiple nodes](@ref).
-- **Linear elastic models**: `Hooke` and `Hooke2D` are purely solve-bound (element matrices are assembled once). Use a single rank with BLAS multithreading. See [Assembly cost across material models](@ref).
+- **Solver**: Use `distributed_solve` for 3D problems (faster at every size measured, up to 10.2× at 273k DOFs).
+  Without MUMPS, `K \ residual` on a single rank remains viable in 3D.
+  Use `K \ residual` for 2D problems, where it led at every size measured up to 4.0M DOFs; above ~500k its lead is 1.14× to 1.31× and available memory determines the choice.
+  See [Choosing the linear solver](@ref).
+- **Rank and thread layout**: For `distributed_solve`, use 18–36 MPI ranks with 2–4 Julia threads per rank.
+  For `K \ residual` in 3D, use a single rank with all cores as Julia threads.
+  In 2D with `K \ residual`, use 4–36 ranks for cheap materials, where all layouts are within 8% of each other, and 18–36 ranks for expensive materials, where the spread reaches 1.5×.
+  See [Rank and thread layout](@ref).
+- **BLAS threads**: Set to 1 in all configurations except single-rank 3D `K \ residual`, where BLAS threading pays (measured at 36 threads on a 72-core node).
+  Multi-threaded BLAS under `distributed_solve` caused a 6.3× slowdown.
+  In 2D, BLAS threading degrades performance at every thread count tested.
+  See [BLAS threads](@ref).
+- **Memory**: Under `K \ residual`, multiply [`estimated_replicated_memory_gb`](@ref) by the ranks per node and compare against node RAM, or read the `fits` field of [`recommended_solve_settings`](@ref), which does exactly that.
+  Both are scaled to `NeoHooke` over three load steps; hence `fits` budgets 2.6× for a more expensive material on a longer run.
+  An expensive model (`VEVP_Zhao2021_AT` measured 9×) or a long run (`NeoHooke` measured 2.5× over 48 load steps) reaches or exceeds that budget on its own, so measure yours before committing to a large job.
+  See [Memory](@ref).
+- **Large meshes**: In 2D, 16M DOFs solve on one node in 154 s at 95 GB, with the rank count lowered so the replicated copies fit.
+  In 3D, the factorization outgrows the memory of 8 nodes somewhere above 1M DOFs.
+  See [Large meshes](@ref).
+- **Multi-node scaling**: Stay on a single node while memory permits; the best single-node layout beat every multi-node layout measured, at 273k and at 985k DOFs in 3D.
+  Expand only when factorization memory exceeds single-node capacity.
+  See [Scaling across multiple nodes](@ref).
+- **Linear elastic models**: `Hooke` and `Hooke2D` are purely solve-bound (element matrices are assembled once).
+  Use a single rank with BLAS multithreading.
+  See [Assembly cost across material models](@ref).
 
 The sections below present the measurements behind these recommendations.
 
@@ -50,7 +68,8 @@ On a single rank, whether or not MPI is initialized, that process assembles all 
 The two solvers differ in how the linear solve is performed:
 
 - **`K \ residual`**: every rank solves the whole system independently, allocating memory for a complete matrix factorization.
-- **[`distributed_solve`](@ref)** (MUMPS): the ranks split one solve between them, so each stores only a fraction of the factorization. Requires `import MUMPS`, and communicates between ranks during factorization.
+- **[`distributed_solve`](@ref)** (MUMPS): the ranks split one solve between them, so each stores only a fraction of the factorization.
+  Requires `import MUMPS`, and communicates between ranks during factorization.
 
 In 3D, `distributed_solve` was faster at every size measured when comparing each solver in its optimal combination of MPI ranks and threads:
 
@@ -117,8 +136,10 @@ The estimate covers one factorization copy, and under `K \ residual` every rank 
 `J2Plasticity` at 47k DOFs measured ~10 GB per rank, so 36 ranks would require ~360 GB and therefore not survive on a 256 GB node.
 
 [`estimated_replicated_memory_gb`](@ref) is further scaled to `NeoHooke` over three load steps, and two factors raise the peak memory of a rank above it:
-- The material, at the same number of load steps: measurements showed 0.7× (`Hooke`) to 1.5× (`VEVP_MOAMMM`) of `NeoHooke`, excluding `VEVP_Zhao2021_AT` at 9× (below). The models differ in history state per quadrature point and in Newton iterations per load step.
-- The number of load steps: `NeoHooke` at 47k DOFs measured 7.1 GB over three load steps, 9.3 GB over six (1.3×), 11.0 GB over twelve (1.55×), 13.4 and 16.3 GB in two repeats at 24 steps, and 14.0 and 18.7 GB at 48. Peak memory keeps growing with the run, and repeats of the same run differ by up to 1.3×, because the recorded peak depends on when the garbage collector happens to run.
+- The material, at the same number of load steps: measurements showed 0.7× (`Hooke`) to 1.5× (`VEVP_MOAMMM`) of `NeoHooke`, excluding `VEVP_Zhao2021_AT` at 9× (below).
+  The models differ in history state per quadrature point and in Newton iterations per load step.
+- The number of load steps: `NeoHooke` at 47k DOFs measured 7.1 GB over three load steps, 9.3 GB over six (1.3×), 11.0 GB over twelve (1.55×), 13.4 and 16.3 GB in two repeats at 24 steps, and 14.0 and 18.7 GB at 48.
+  Peak memory keeps growing with the run, and repeats of the same run differ by up to 1.3×, because the recorded peak depends on when the garbage collector happens to run.
 
 Together the two factors reach 2.6× in `VEVP_MOAMMM` over twelve load steps, which measured 17.1 GB against the 6.6 GB estimated, and [`recommended_solve_settings`](@ref) allows exactly this 2.6× in its `fits` field.
 Either factor reaches that budget on its own: `NeoHooke` measured 2.5× its estimate over 48 load steps, and `VEVP_Zhao2021_AT` 9× over three, at 59.8 GB against the 6.6 GB estimated.
@@ -269,8 +290,11 @@ The rank count decreases along the 2D rows to keep the replicated copies within 
 Peak memory, by contrast, does extrapolate: the three 2D points imply an exponent of 1.083, against the 1.086 that [`estimated_replicated_memory_gb`](@ref) fits over meshes an order of magnitude smaller.
 
 Four configurations did not complete, in every case for lack of memory:
-- 2D at 16.0M DOFs with `distributed_solve`, at 18 ranks on one node and at 36 ranks across two. Each rank holds its own copy of `K`, and at that size 18 copies already exceed node RAM (see [Memory](@ref)).
-- 3D at 4.0M and 16.0M DOFs with `distributed_solve` on 8 nodes. The fitted memory curve estimates their factorizations at 2.9 TB and 21 TB. Both runs reached 1998 GB and 2006 GB of the 2048 GB available, and the scheduler terminated them within five minutes.
+- 2D at 16.0M DOFs with `distributed_solve`, at 18 ranks on one node and at 36 ranks across two.
+  Each rank holds its own copy of `K`, and at that size 18 copies already exceed node RAM (see [Memory](@ref)).
+- 3D at 4.0M and 16.0M DOFs with `distributed_solve` on 8 nodes.
+  The fitted memory curve estimates their factorizations at 2.9 TB and 21 TB.
+  Both runs reached 1998 GB and 2006 GB of the 2048 GB available, and the scheduler terminated them within five minutes.
 
 In 3D the factorization therefore exceeds the memory of eight nodes somewhere above 1M DOFs, while a 2D mesh of the same DOF-size still fits on a single node.
 Both solvers form an explicit factorization, so no rank or thread layout within `distributed_solve` overcomes this limit.

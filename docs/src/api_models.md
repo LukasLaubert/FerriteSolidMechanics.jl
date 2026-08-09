@@ -27,13 +27,10 @@ VEVP_MOAMMM
 ## Dimensionality wrappers
 
 The `PlaneStrain` and `PlaneStress` wrappers turn a 3D material model into a 2D one, with the mathematical details explained on the [Wrappers](wrappers.md) page.
-The two extension points below (`compute_PK1_3D` and `update_state_from_3D!`) are exported as part of the stable API.
-A `FiniteStrain` material must implement both methods to be wrappable, since no universal conversion from deformation gradient to stress exists for finite-strain kinematics.
-A `SmallStrain` material and any `AbstractHyperelastic` subtype need neither: a generic fallback derives both hooks from `material_response`.
+A bundled model requires no further preparation before it is wrapped.
+A custom 3D model becomes wrappable through the `compute_PK1_3D` and `update_state_from_3D!` extension points, which are documented with the rest of the material interface on the [General API](api.md) page.
 
 ```@docs
 PlaneStrain
 PlaneStress
-compute_PK1_3D
-update_state_from_3D!
 ```

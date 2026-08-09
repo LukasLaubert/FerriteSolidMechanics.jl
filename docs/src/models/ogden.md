@@ -93,7 +93,7 @@ and the Cauchy stress is
 The `dt` keyword is ignored.
 
 ### Tangent formulation
-`Ogden` provides an exact analytical tangent through `tangent=:AT`.
+`Ogden` provides an exact analytical tangent.
 The tangent differentiates the spectral powers $\boldsymbol{C}^{p_a}$ through divided differences and uses the repeated-eigenvalue limit when two eigenvalues coincide.
 At the undeformed state $\boldsymbol{C}=\boldsymbol{I}$, and more generally when two principal stretches coincide, direct AD through the spectral powers can return non-finite derivatives.
 The analytical tangent avoids this by using divided differences with repeated-eigenvalue limits.
@@ -108,7 +108,7 @@ Since the material has no history, `update_state_from_3D!` is a no-op.
 ## Constructor
 
 ```julia
-Ogden(μ, α, κ; tangent=:AT)
+Ogden(μ, α, κ)
 ```
 
 `μ` and `α` can be real scalars, tuples, or vectors.
@@ -116,7 +116,6 @@ They must contain the same nonzero number of finite terms.
 Every `α` entry must be nonzero, `κ` must be finite and positive, and the combined small-strain shear modulus `0.5 * sum(μ .* α)` must be positive.
 Individual negative fitted terms are accepted when the combined small-strain shear modulus is positive.
 This constructor check does not guarantee ellipticity or stability over all finite-strains.
-The optional `tangent` keyword currently accepts only `:AT`; passing `:AD` raises an `ArgumentError`.
 
 ## 2D usage
 
@@ -133,7 +132,6 @@ For wrapper mechanics, see [Wrappers](../wrappers.md).
 | `μ` | $\mu_a$ | Term coefficient in the classic $\mu_a/\alpha_a$ Ogden convention |
 | `α` | $\alpha_a$ | Nonzero principal stretch exponent for each term |
 | `κ` | $\kappa$ | Bulk modulus |
-| `tangent` | - | Exact tangent route, currently `:AT` only |
 
 ## Provenance and acknowledgements
 

@@ -3,18 +3,20 @@
 
 Compressible Ogden hyperelastic material with an arbitrary number of isochoric terms.
 The stress and tangent are analytic, in spectral form.
-The vectors `μ` and `α` hold one coefficient and one exponent per term, in the `μ / α` Ogden convention.
 Scalar `μ` and `α` values are accepted as a one-term shorthand.
-The bulk modulus `κ` parameterizes the volumetric response.
 The combined small-strain shear modulus `0.5 * sum(μ .* α)` must be positive.
+
+### Parameters
+
+- `μ` – Vector holding one coefficient per term, in the `μ / α` Ogden convention
+- `α` – Vector holding one nonzero principal stretch exponent per term
+- `κ` – Bulk modulus; parameterizes the volumetric response
 
 # References
 
 - R. W. Ogden.
-  *Large deformation isotropic elasticity – on the correlation of theory and
-  experiment for incompressible rubberlike solids.*
-  Proceedings of the Royal Society of London. Series A, Mathematical and
-  Physical Sciences **326**(1567) (1972) 565-584.
+  *Large deformation isotropic elasticity – on the correlation of theory and experiment for incompressible rubberlike solids.*
+  Proceedings of the Royal Society of London. Series A, Mathematical and Physical Sciences **326**(1567) (1972) 565-584.
   <https://doi.org/10.1098/rspa.1972.0026>
 - R. W. Ogden.
   *Non-Linear Elastic Deformations.*

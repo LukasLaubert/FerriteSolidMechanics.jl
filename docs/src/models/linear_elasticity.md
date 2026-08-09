@@ -4,17 +4,15 @@ Standard isotropic linear elasticity (`src/models/LinearElasticity.jl`).
 
 Two constructors are provided:
 
-- [`Hooke`](@ref) – 3D isotropic linear elasticity, parameterized by
-  `E` and `ν`.
-- [`Hooke2D`](@ref) – 2D isotropic linear elasticity, with a
-  `plane_stress::Bool` keyword. By default it builds a plane strain
-  stiffness; pass `plane_stress=true` for the analytical plane stress
-  matrix.
+- [`Hooke`](@ref) – 3D isotropic linear elasticity, parameterized by `E` and `ν`.
+- [`Hooke2D`](@ref) – 2D isotropic linear elasticity, with a `plane_stress::Bool` keyword.
+  By default it builds a plane strain stiffness; pass `plane_stress=true` for the analytical plane stress matrix.
 
 ### Mathematical formulation
 
 The 3D `Hooke` model uses the fourth-order isotropic Lamé stiffness $C_{ijkl} = \lambda\delta_{ij}\delta_{kl} + \mu\left[\delta_{ik}\delta_{jl} + \delta_{il}\delta_{jk}\right]$, where $C_{ijkl}$ maps strain to stress, $\delta_{ij}$ is the Kronecker delta, and the indices $i,j,k,l$ run over the spatial dimensions.
-The Lamé parameters are $\lambda = E\nu / \left[\left[1+\nu\right]\left[1-2\nu\right]\right]$ and $\mu = E / \left[2\left[1+\nu\right]\right]$. `Hooke2D` uses the same Lamé form for plane strain and an analytical Voigt matrix for plane stress.
+The Lamé parameters are $\lambda = E\nu / \left[\left[1+\nu\right]\left[1-2\nu\right]\right]$ and $\mu = E / \left[2\left[1+\nu\right]\right]$.
+`Hooke2D` uses the same Lamé form for plane strain and an analytical Voigt matrix for plane stress.
 
 ## Implementation details
 
@@ -53,8 +51,7 @@ C^{\mathrm{pe}}_{ijkl} = \lambda\,\delta_{ij}\delta_{kl} + \mu\,
 \left[\delta_{ik}\delta_{jl} + \delta_{il}\delta_{jk}\right]
 ```
 
-with $\lambda = E\nu / \left[\left[1+\nu\right]\left[1-2\nu\right]\right]$
-and $\mu = E / \left[2\left[1+\nu\right]\right]$.
+with $\lambda = E\nu / \left[\left[1+\nu\right]\left[1-2\nu\right]\right]$ and $\mu = E / \left[2\left[1+\nu\right]\right]$.
 
 ## Hooke2D vs PlaneStrain(Hooke) / PlaneStress(Hooke)
 

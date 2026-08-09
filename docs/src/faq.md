@@ -7,7 +7,8 @@ If you have questions that are not addressed here, check the [Concepts](concepts
 
 ### Does the assembler run a Newton loop for me?
 
-No. The assembler returns `(K, r)` from `(try_)stiffness_matrix`; the user writes the convergence test and the `u .-= K \ r` update.
+No.
+The assembler returns `(K, r)` from `(try_)stiffness_matrix`; the user writes the convergence test and the `u .-= K \ r` update.
 The tutorials demonstrate the typical Newton loop.
 The [Concepts](concepts.md) page details the exact scope of the assembler.
 
@@ -24,8 +25,8 @@ Assembly semantics are model-dependent:
 
 ### Does `compute_stresses` advance my material state?
 
-No for the bundled models. Use `(try_)stiffness_matrix` (or `compute_forces`) in the Newton loop to write trial state, call `update_states!` once after a converged load step, then call `compute_stresses` whenever you need stress
-output.
+No for the bundled models.
+Use `(try_)stiffness_matrix` (or `compute_forces`) in the Newton loop to write trial state, call `update_states!` once after a converged load step, then call `compute_stresses` whenever you need stress output.
 `compute_stresses` reports the stress corresponding to the current assembler state (whether trial or committed) without advancing internal variables.
 The postprocessing hooks (`material_stress`, or the lower-level `_compute_stress_qp`) receive `dt`, but leave it at the default `dt = 0.0`: they must not advance state, and are not a substitute for `(try_)stiffness_matrix` or `update_states!`.
 However, passing different values for `dt` can be used as an advanced extension point.
@@ -136,7 +137,8 @@ Element routines multiply `α` into the residual and element stiffness tangent, 
 ### How do threads come into play?
 
 FerriteSolidMechanics automatically runs element assembly in parallel across all available Julia threads.
-You do not need to change any code to enable this. Simply start your script with multiple threads (e.g., `julia -t 4` or by setting the `JULIA_NUM_THREADS=4` environment variable).
+You do not need to change any code to enable this.
+Simply start your script with multiple threads (e.g., `julia -t 4` or by setting the `JULIA_NUM_THREADS=4` environment variable).
 
 When you call `(try_)stiffness_matrix`, the package distributes the nonlinear cells across threads using a dynamic task scheduler (`OhMyThreads.@tasks`).
 The element matrices are computed in parallel and then safely scattered into the global sparse stiffness matrix `K`.

@@ -151,7 +151,8 @@ end
 
 Because the `VEVP_Zhao2021_AD` model is rate-dependent, the `dt` passed to `stiffness_matrix` is the physical time increment between two entries of `load_profile`.
 This example keeps `dt` fixed and calls `stiffness_matrix` directly, which is sufficient for this load case and material parameters.
-For simulations where the local material update may fail, replace the assembly call (`stiffness_matrix`) with [`try_stiffness_matrix`](@ref) and reject or retry the whole load step as shown in the [Adaptive time stepping](adaptive_time_stepping.md) tutorial. Fail-recovery must be supported by the material model chosen; see [Feature support](@ref).
+For simulations where the local material update may fail, replace the assembly call (`stiffness_matrix`) with [`try_stiffness_matrix`](@ref) and reject or retry the whole load step as shown in the [Adaptive time stepping](adaptive_time_stepping.md) tutorial.
+Fail-recovery must be supported by the material model chosen; see [Feature support](@ref).
 Since [`try_stiffness_matrix`](@ref) synchronizes local failures automatically across MPI ranks, the adaptive time stepping loop requires no MPI-specific changes: if `converged = false`, every rank rolls back, reduces `dt`, and retries the same step.
 
 ## Postprocessing

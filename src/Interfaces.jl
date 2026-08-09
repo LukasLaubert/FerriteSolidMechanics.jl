@@ -372,10 +372,12 @@ function _compute_stress_qp end
 """
     compute_PK1_3D(material, F, dt, state)
 
-Return the 3D first Piola-Kirchhoff stress for the dimensional wrappers.
+Return the 3D first Piola-Kirchhoff stress for the dimensionality wrappers.
 
 > **Extension point.** A cross-package hook.
-> Any material that is to be wrapped by [`PlaneStrain`](@ref) or [`PlaneStress`](@ref) must provide a method.
+> A [`FiniteStrain`](@ref) material must provide a method to be wrapped by [`PlaneStrain`](@ref) or [`PlaneStress`](@ref).
+> A [`SmallStrain`](@ref) material requires no method, because a fallback maps the stress returned by [`material_response`](@ref) to `P`.
+> An [`AbstractHyperelastic`](@ref) subtype requires none either, because a fallback derives `P` from the strain energy `Ψ`.
 """
 function compute_PK1_3D end
 
@@ -385,7 +387,9 @@ function compute_PK1_3D end
 Update a wrapped material state after a 3D constitutive evaluation.
 
 > **Extension point.** A cross-package hook.
-> Any material that is to be wrapped by [`PlaneStrain`](@ref) or [`PlaneStress`](@ref) must provide a method.
+> A [`FiniteStrain`](@ref) material must provide a method to be wrapped by [`PlaneStrain`](@ref) or [`PlaneStress`](@ref).
+> A [`SmallStrain`](@ref) material requires no method, because a fallback takes the trial state from [`material_response`](@ref).
+> An [`AbstractHyperelastic`](@ref) subtype requires none either, because it is stateless and the fallback performs no update.
 > The method writes the material's current/trial variables for the converged 3D deformation gradient `F`, and a replacement-style state may return a new state value.
 > The history commit still happens through `update_state!` and [`update_states!`](@ref).
 """
@@ -446,12 +450,10 @@ create_alpha_values(::Nothing, cellvalues) = nothing
 """
     deformation_gradient(cellvalues, qp, u_local)
 
-Compute the deformation gradient `F = I + ∇u` at quadrature point `qp` from
-the given `cellvalues` and the element-local displacement vector `u_local`.
+Compute the deformation gradient `F = I + ∇u` at quadrature point `qp` from the given `cellvalues` and the element-local displacement vector `u_local`.
 
 `cellvalues` is a Ferrite `CellValues`. `qp` is the quadrature point index.
-`u_local` is the displacement vector restricted to the current cell, in the
-order returned by `celldofs(cell)`.
+`u_local` is the displacement vector restricted to the current cell, in the order returned by `celldofs(cell)`.
 
 Returns a `Tensor{2,dim}` with the element type of `u_local`, where `dim` is the spatial dimension.
 For `Float64` displacements this is `Tensor{2,3,Float64,9}` in 3D or `Tensor{2,2,Float64,4}` in 2D.

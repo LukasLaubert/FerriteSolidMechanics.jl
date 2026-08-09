@@ -141,8 +141,9 @@ The second writes the wrapped material's current/trial variables at the converge
 Final commit happens through the usual `update_state!` / `update_states!` path.
 
 Small-strain models (and `AbstractHyperelastic` subtypes) do not need to implement either method.
-A generic fallback builds both from `material_response`: it forms `ε = sym(F̄ - I)`, evaluates the constitutive response, and converts the resulting Cauchy stress to PK1.
-Finite-strain models must implement both methods explicitly, as no universal conversion from deformation gradient to stress exists for them.
+For a small-strain model, a generic fallback derives both from `material_response`: it forms `ε = sym(F̄ - I)`, evaluates the constitutive response, and converts the resulting Cauchy stress to PK1.
+For an `AbstractHyperelastic` subtype, the fallback derives `P̄` from the strain energy `Ψ`, and the state update performs no work because the model is stateless.
+Every other finite-strain model must implement both methods explicitly, as no universal conversion from deformation gradient to stress exists for them.
 
 Both wrappers differentiate `compute_PK1_3D` with ForwardDiff.
 The deformation gradient therefore carries `ForwardDiff.Dual` entries, while the committed history remains `Float64`.

@@ -3,10 +3,8 @@
 """
     PlaneStressConvergenceError
 
-Recoverable failure raised by [`PlaneStress`](@ref) when the local
-out-of-plane Newton solve or tangent condensation cannot produce a valid
-plane stress state. Catch this directly, or call
-[`try_stiffness_matrix`](@ref) to receive it as `result.error`.
+Recoverable failure raised by [`PlaneStress`](@ref) when the local out-of-plane Newton solve or tangent condensation cannot produce a valid plane stress state.
+Catch this directly, or call [`try_stiffness_matrix`](@ref) to receive it as `result.error`.
 """
 struct PlaneStressConvergenceError <: LocalAssemblyFailure
     reason::Symbol

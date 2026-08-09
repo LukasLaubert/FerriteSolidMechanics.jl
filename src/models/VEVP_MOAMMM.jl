@@ -10,22 +10,6 @@
 Viscoelastic-viscoplastic material model from the [MOAMMM project](https://www.moammm.eu/) with automatic differentiation.
 Combines a logarithmic strain viscoelastic update, a Drucker–Prager yield surface, isotropic hardening through separate compression and tension yield stress evolution, and kinematic hardening.
 
-# References
-
-- V.-D. Nguyen, F. Lani, T. Pardoen, X. P. Morelle, L. Noels.
-  *A large strain hyperelastic viscoelastic-viscoplastic-damage constitutive model based on a multi-mechanism non-local damage continuum for amorphous glassy polymers.*
-  International Journal of Solids and Structures **96** (2016) 192–216.
-  <https://doi.org/10.1016/j.ijsolstr.2016.06.008>
-
-The code-level reference for this implementation is the Fortran UMAT
-[`umat.f`](https://gitlab.uliege.be/moammm/moammmPublic/code/-/blob/main/MaterialModels/FiniteStrain/Finite_VEVP/umat.f?ref_type=heads)
-from the moammmPublic code repository.
-
-!!! note
-    The Nguyen et al. (2016) paper describes a full hyperelastic–viscoelastic–viscoplastic model with damage and softening.
-    The translated Fortran `UMAT` (`umat.f` in the moammmPublic repository) implements only the damage-free, no-softening subset of that model.
-    This Julia port implements the same subset.
-
 ### Parameters
 
 - `order` – Polynomial order for the logarithm/exponential approximations
@@ -50,6 +34,20 @@ from the moammmPublic code repository.
 - `k` – Vector of per-branch volumetric relaxation times; larger values delay volumetric equilibration
 - `GG` – Vector of per-branch shear moduli; raise the deviatoric branch stiffness
 - `g` – Vector of per-branch deviatoric relaxation times; larger values delay deviatoric equilibration
+
+# References
+
+- V.-D. Nguyen, F. Lani, T. Pardoen, X. P. Morelle, L. Noels.
+  *A large strain hyperelastic viscoelastic-viscoplastic-damage constitutive model based on a multi-mechanism non-local damage continuum for amorphous glassy polymers.*
+  International Journal of Solids and Structures **96** (2016) 192–216.
+  <https://doi.org/10.1016/j.ijsolstr.2016.06.008>
+
+The code-level reference for this implementation is the Fortran UMAT [`umat.f`](https://gitlab.uliege.be/moammm/moammmPublic/code/-/blob/main/MaterialModels/FiniteStrain/Finite_VEVP/umat.f?ref_type=heads) from the moammmPublic code repository.
+
+!!! note
+    The Nguyen et al. (2016) paper describes a full hyperelastic–viscoelastic–viscoplastic model with damage and softening.
+    The translated Fortran `UMAT` (`umat.f` in the moammmPublic repository) implements only the damage-free, no-softening subset of that model.
+    This Julia port implements the same subset.
 """
 struct VEVP_MOAMMM <: AbstractMaterial
     order::Int
@@ -90,8 +88,7 @@ end
 """
     VEVP_MOAMMMConvergenceError
 
-Recoverable failure raised when the local `VEVP_MOAMMM` plastic correction
-does not converge within its fixed Newton iteration budget.
+Recoverable failure raised when the local `VEVP_MOAMMM` plastic correction does not converge within its fixed Newton iteration budget.
 """
 struct VEVP_MOAMMMConvergenceError <: LocalAssemblyFailure
     plastic_multiplier

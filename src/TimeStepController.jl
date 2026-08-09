@@ -85,8 +85,7 @@ end
 """
     reset_controller!(controller)
 
-Reset the controller's consecutive rejection counter to zero and return the
-controller.
+Reset the controller's consecutive rejection counter to zero and return the controller.
 """
 function reset_controller!(controller::TimeStepController)
     controller.rejections = 0

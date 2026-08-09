@@ -23,13 +23,11 @@ Combines crystalline elasticity, network hyperelasticity, closed-form Maxwell-br
 # References
 
 - F. Detrez, S. Cantournet, R. Séguéla.
-  *A constitutive model for semi-crystalline polymer deformation
-  involving lamellar fragmentation.*
+  *A constitutive model for semi-crystalline polymer deformation involving lamellar fragmentation.*
   Comptes Rendus Mécanique **338**(12) (2010) 681–687.
   <https://doi.org/10.1016/j.crme.2010.10.008>
 
-The code-level reference for this implementation is an unpublished C
-routine that was kindly provided by Fabrice Detrez.
+The code-level reference for this implementation is an unpublished C routine that was kindly provided by Fabrice Detrez.
 """
 struct VEPD_Detrez2010_ClosedCVEndStep <: AbstractMaterial
     E::Float64; ν::Float64; R0::Float64; Q::Float64; b::Float64
@@ -51,8 +49,7 @@ VEPD_Detrez2010_ClosedCVEndStep(E, ν, R0, Q, b, α, β, n_ab, μ_ab, G, τ) =
 """
     VEPD_Detrez2010_ClosedCVEndStepConvergenceError
 
-Recoverable failure raised when the local VEPD Detrez plastic correction
-does not converge within its fixed Newton iteration budget.
+Recoverable failure raised when the local VEPD Detrez plastic correction does not converge within its fixed Newton iteration budget.
 """
 struct VEPD_Detrez2010_ClosedCVEndStepConvergenceError <: LocalAssemblyFailure
     delta_p

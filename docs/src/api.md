@@ -151,10 +151,20 @@ _assemble_element!
 _compute_stress_qp
 ```
 
+### Dimensionality wrapper extension points
+
+The following two exported hooks allow a 3D material to be wrapped by `PlaneStrain` and `PlaneStress`, which are documented on the [Material model API](api_models.md) page.
+A `FiniteStrain` material must implement both, since no universal conversion from deformation gradient to stress exists for finite-strain kinematics.
+A `SmallStrain` material and any `AbstractHyperelastic` subtype require neither: the `SmallStrain` fallback derives both hooks from [`material_response`](@ref), while the `AbstractHyperelastic` fallback derives the stress from the strain energy `Ψ` and provides a no-op state update.
+
+```@docs
+compute_PK1_3D
+update_state_from_3D!
+```
+
 ## Kinematics
 
-The `deformation_gradient` function is the main kinematics helper intended for direct use in element routines.
-In contrast, wrapper hooks such as `compute_PK1_3D` and `update_state_from_3D!` are documented separately below.
+The `deformation_gradient` function is the only kinematics helper provided for direct use in element routines.
 
 ```@docs
 deformation_gradient
@@ -171,7 +181,7 @@ VEVP_MOAMMMConvergenceError
 
 ## Material models and dimensionality wrappers
 
-The constructor docstrings of the eleven bundled material models, the `PlaneStrain` and `PlaneStress` wrappers, and the two wrapper extension points `compute_PK1_3D` and `update_state_from_3D!` are covered on the [Material model API](api_models.md) page.
+The constructor docstrings of the eleven bundled material models and the `PlaneStrain` and `PlaneStress` wrappers are covered on the [Material model API](api_models.md) page.
 
 ## Alpha Scaling
 

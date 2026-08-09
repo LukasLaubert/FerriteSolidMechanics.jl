@@ -42,17 +42,10 @@ The crystalline cohesive part uses the multiplicative split
 =
 \frac{1}{2}\left[\boldsymbol{C}^{\mathrm{e}}-\boldsymbol{I}\right] \text{.}
 ```
-Here, $\boldsymbol{F}$ is the total deformation gradient,
-$\boldsymbol{F}^{\mathrm{e}}$ and $\boldsymbol{F}^{\mathrm{p}}$ are its
-elastic and plastic parts, $\boldsymbol{C}^{\mathrm{e}}$ is the elastic
-right Cauchy-Green tensor, $\boldsymbol{E}^{\mathrm{e}}$ is the elastic
-Green-Lagrange strain, and $\boldsymbol{I}$ is the identity tensor. The
-operators $\operatorname{tr}(\cdot)$ and $\operatorname{dev}(\cdot)$
-denote the trace and deviatoric part.
+Here, $\boldsymbol{F}$ is the total deformation gradient, $\boldsymbol{F}^{\mathrm{e}}$ and $\boldsymbol{F}^{\mathrm{p}}$ are its elastic and plastic parts, $\boldsymbol{C}^{\mathrm{e}}$ is the elastic right Cauchy-Green tensor, $\boldsymbol{E}^{\mathrm{e}}$ is the elastic Green-Lagrange strain, and $\boldsymbol{I}$ is the identity tensor.
+The operators $\operatorname{tr}(\cdot)$ and $\operatorname{dev}(\cdot)$ denote the trace and deviatoric part.
 
-With Lamé parameters $\lambda_E$ and $\mu_E$ computed from the
-crystalline Young's modulus `E` and Poisson's ratio `ν`, the damage-free
-crystalline second Piola-Kirchhoff stress renders as
+With Lamé parameters $\lambda_E$ and $\mu_E$ computed from the crystalline Young's modulus `E` and Poisson's ratio `ν`, the damage-free crystalline second Piola-Kirchhoff stress renders as
 ```math
 \boldsymbol{S}^{\mathrm{c}}
 =
@@ -60,9 +53,8 @@ crystalline second Piola-Kirchhoff stress renders as
 + 2\mu_{\mathrm{E}}\boldsymbol{E}^{\mathrm{e}} \text{,}
 ```
 
-while the scalar damage variable $D$ follows the plastic strain coupling
-of Detrez et al. [1]. With accumulated plastic strain $p$ and damage
-parameters $\alpha$ and $\beta$, the Julia value is capped at full damage,
+while the scalar damage variable $D$ follows the plastic strain coupling of Detrez et al. [1].
+With accumulated plastic strain $p$ and damage parameters $\alpha$ and $\beta$, the Julia value is capped at full damage,
 ```math
 D(p)
 =
@@ -94,8 +86,7 @@ Plastic loading is checked with the elastically rescaled Mandel stress
 
 The factor $1/J^{\mathrm{e}}$ rescales the elastic Mandel stress $\boldsymbol{C}^{\mathrm{e}}\boldsymbol{S}^{\mathrm{c}}$ to the same volumetric frame as $\boldsymbol{\sigma}^{\mathrm{cs}}$, so the yield residual $f$ compares consistent state forces.
 
-With initial yield stress $R_0$, saturation modulus $Q$, and saturation
-exponent $b$, the hardening stress $R(p)$ and yield residual $f$ are
+With initial yield stress $R_0$, saturation modulus $Q$, and saturation exponent $b$, the hardening stress $R(p)$ and yield residual $f$ are
 ```math
 R(p)
 =
@@ -119,9 +110,7 @@ For `plastic_update=:end_step`, when $f > 10^{-9}E$, a scalar Newton problem is 
 \qquad\text{and}\quad
 p_{n+1}=p_n+\Delta p \text{.}
 ```
-Here, $\boldsymbol{N}$ is the plastic flow direction, index $n$ marks the
-start-of-step state, and $n+1$ the end-of-step state of an incremental
-update over $\Delta t$.
+Here, $\boldsymbol{N}$ is the plastic flow direction, index $n$ marks the start-of-step state, and $n+1$ the end-of-step state of an incremental update over $\Delta t$.
 With `plastic_update=:path_substepped`, the deformation change over the global time step is split into 8 linear subincrements, and the scalar plastic return solve is applied successively at the end of each subincrement.
 
 #### 2. Equilibrium network stress
@@ -148,8 +137,7 @@ The derivative of the truncated Arruda–Boyce energy is
 + \frac{\bar{I}_1}{10n_{\mathrm{ab}}}
 + \frac{11\bar{I}_1^2}{350n_{\mathrm{ab}}^2}+ \frac{19\bar{I}_1^3}{1750n_{\mathrm{ab}}^3} + \frac{519\bar{I}_1^4}{134750n_{\mathrm{ab}}^4} \right]
 ```
-where $W$ is the network energy, $\mu_{\mathrm{ab}}$ is the network shear
-modulus, and $n_{\mathrm{ab}}$ is the number of Kuhn segments per chain.
+where $W$ is the network energy, $\mu_{\mathrm{ab}}$ is the network shear modulus, and $n_{\mathrm{ab}}$ is the number of Kuhn segments per chain.
 
 The corresponding second Piola-Kirchhoff stress is
 ```math
@@ -178,18 +166,9 @@ Detrez et al. [1] write the Maxwell branch evolution in rate form as
 =
 G_i\,\mathbb{J}:\boldsymbol{D} \text{,}
 ```
-where the over-nabla denotes the objective stress rate, $i$ is the
-Maxwell-branch index, $G_i$ the branch shear modulus, $\tau_i$ the branch
-relaxation time, $\mathbb{J}$ the deviatoric projection,
-$\boldsymbol{D}$ the rate-of-deformation tensor, and
-$\boldsymbol{\sigma}_i$ the per-branch Cauchy stress.
+where the over-nabla denotes the objective stress rate, $i$ is the Maxwell-branch index, $G_i$ the branch shear modulus, $\tau_i$ the branch relaxation time, $\mathbb{J}$ the deviatoric projection, $\boldsymbol{D}$ the rate-of-deformation tensor, and $\boldsymbol{\sigma}_i$ the per-branch Cauchy stress.
 The code-level reference [2] integrates this rate equation with a fourth-order Runge-Kutta scheme, while this implementation exposes two Maxwell-branch update choices:
-The default `maxwell_update=:closed_form_cv` uses a closed-form update for
-the per-branch viscous metric, where
-$\boldsymbol{C}^{\mathrm{v}}_{i,n}$ is branch $i$'s start-of-step viscous
-right Cauchy-Green tensor, $\Delta t$ is the time increment, and
-$\boldsymbol{C}_{n+1}=\boldsymbol{F}_{n+1}^T\boldsymbol{F}_{n+1}$ is the
-total right Cauchy-Green tensor at end-of-step, reading
+The default `maxwell_update=:closed_form_cv` uses a closed-form update for the per-branch viscous metric, where $\boldsymbol{C}^{\mathrm{v}}_{i,n}$ is branch $i$'s start-of-step viscous right Cauchy-Green tensor, $\Delta t$ is the time increment, and $\boldsymbol{C}_{n+1}=\boldsymbol{F}_{n+1}^T\boldsymbol{F}_{n+1}$ is the total right Cauchy-Green tensor at end-of-step, reading
 ```math
 \boldsymbol{C}^{\mathrm{v}}_{i,n+1}
 =
@@ -288,9 +267,7 @@ Fabrice Detrez is gratefully acknowledged for providing the original C implement
 
 - [Developer guide](../developer_guide.md) – for the general material hooks.
 - [Wrappers](../wrappers.md) – for 2D usage.
-- Experimental variants: `VEPD_Detrez2010_Optimized`, `VEPD_Detrez2010_Implicit`,
-  `VEPD_Detrez2010_ExactVisco`, `VEPD_Detrez2010_ClosedCVEndStep`
-  (see [Experimental models](../experimental.md)).
+- Experimental variants: `VEPD_Detrez2010_Optimized`, `VEPD_Detrez2010_Implicit`, `VEPD_Detrez2010_ExactVisco`, `VEPD_Detrez2010_ClosedCVEndStep` (see [Experimental models](../experimental.md)).
 
 
 ## References

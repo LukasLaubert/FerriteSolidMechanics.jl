@@ -75,9 +75,7 @@ There are two levels at which a material can plug into the assembler:
    The bundled `VEVP_Zhao2021_AT` provides an example: its hand-derived tangent is assembled from nodal shape-gradient blocks and cannot be expressed as a per-point `∂P/∂F`.
    (Comparable to Abaqus' `UEL`)
 
-Stateless hyperelastic models have a third, even shorter path: subtype
-[`AbstractHyperelastic`](@ref) and implement only the strain energy density
-`Ψ(C, material)` (see below).
+Stateless hyperelastic models have a third, even shorter path: subtype [`AbstractHyperelastic`](@ref) and implement only the strain energy density `Ψ(C, material)` (see below).
 
 !!! note "Design acknowledgement"
     The constitutive-level interface follows the conventions established by Knut Andreas Meyer's [MaterialModelsBase.jl](https://github.com/KnutAM/MaterialModelsBase.jl) (single response function returning `(stress, tangent, new_state)`, strain-measure-driven stress/tangent pairs, material cache hook).
@@ -97,7 +95,7 @@ Some capabilities, however, depend on the material model or wrapper explicitly s
 | Linear preassembly | `is_linear(material) = true` |
 | Symmetric-tangent fast path | `tangent_symmetry(material) = MajorSymmetric()`, for small-strain materials whose `D` satisfies `D[i,j,k,l] == D[k,l,i,j]` |
 | Rate dependence | The material update must actually use `dt` |
-| Generic `PlaneStrain` / `PlaneStress` wrappers | `compute_PK1_3D` and `update_state_from_3D!` for the wrapped 3D material (derived automatically from `material_response` for `AbstractHyperelastic` subtypes and any `SmallStrain` material; finite-strain models must implement them) |
+| Generic `PlaneStrain` / `PlaneStress` wrappers | `compute_PK1_3D` and `update_state_from_3D!` for the wrapped 3D material (derived automatically from `material_response` for any `SmallStrain` material model and from the strain energy `Ψ` for `AbstractHyperelastic` subtypes; every other finite-strain model must implement them) |
 | Local failure reporting | The material or wrapper must throw a [`LocalAssemblyFailure`](@ref) ([`try_stiffness_matrix`](@ref) then converts this to `converged = false`) |
 
 ### Required functions (linear elastic model)
@@ -124,7 +122,8 @@ See `src/models/LinearElasticity.jl`, which defines both `Hooke` and `Hooke2D`, 
 
 ### Required functions (nonlinear elastic material)
 
-For a generic nonlinear elastic material that is not history-dependent, you only need to define the material properties, flag it as nonlinear, and implement the constitutive response. No state tracking functions are needed:
+For a generic nonlinear elastic material that is not history-dependent, you only need to define the material properties, flag it as nonlinear, and implement the constitutive response.
+No state tracking functions are needed:
 
 ```julia
 is_linear(::MyNonlinearMaterial) = false
@@ -298,8 +297,7 @@ The user must explicitly call `revert_states!(assembler)` in their outer solver 
 ## Example: Implementing J2Plasticity
 
 A small non-trivial model is the small-strain J2 plasticity with linear isotropic hardening.
-It is ported from the Ferrite.jl plasticity tutorial [1]; reading that tutorial side-by-side
-with this section is the recommended way to see the correspondence between pure Ferrite code and the `FerriteSolidMechanics.jl` hooks.
+It is ported from the Ferrite.jl plasticity tutorial [1]; reading that tutorial side-by-side with this section is the recommended way to see the correspondence between pure Ferrite code and the `FerriteSolidMechanics.jl` hooks.
 
 ### Material struct and state
 

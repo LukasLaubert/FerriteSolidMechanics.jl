@@ -63,9 +63,7 @@ Provides an analytically derived stiffness matrix for finite-strain problems.
 
 # Note: not interchangeable with `VEVP_Zhao2021_AD`
 
-Uses a Matrix-storage translation of the reference routines with
-explicit permission for MIT distribution in FerriteSolidMechanics.jl
-(`set_vevp_stress_S_C.m` + `set_vevp_stiffness_matrix_SC_gp.m`).
+Uses a Matrix-storage translation of the reference routines with explicit permission for MIT distribution in FerriteSolidMechanics.jl (`set_vevp_stress_S_C.m` + `set_vevp_stiffness_matrix_SC_gp.m`).
 This model builds the final PK2 stress from the trial `SV_trial{j}` (old `μVₖ`, old `Cᵢₖ_inv`) and pairs it with a hand-derived analytical tangent.
 `VEVP_Zhao2021_AD` builds it from the converged `SVⱼ` (new `μVₖ₊₁`, new `Cᵢₖ₊₁`) and obtains the tangent by automatic differentiation.
 The same `F`, `dt`, parameters, and history state therefore give different PK2 stresses from the two models.

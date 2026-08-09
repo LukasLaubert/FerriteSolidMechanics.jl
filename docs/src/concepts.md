@@ -176,7 +176,8 @@ Material model authors are encouraged to follow these conventions as outlined in
 
 ## The `dt` keyword
 
-The public assembly functions (`stiffness_matrix`, `try_stiffness_matrix`, `compute_forces`) and the postprocessing function (`compute_stresses`) all accept `dt` as a keyword argument. However, only the assembly functions are allowed to advance material history.
+The public assembly functions (`stiffness_matrix`, `try_stiffness_matrix`, `compute_forces`) and the postprocessing function (`compute_stresses`) all accept `dt` as a keyword argument.
+However, only the assembly functions are allowed to advance material history.
 
 - **Rate-independent** materials ignore `dt` (see the [Stable models](models/index.md#Stable-models) table).
 - **Viscoelastic / viscoplastic** materials use `dt` to evolve internal variables (viscous stretches, plastic flow, cumulative strain, etc.).

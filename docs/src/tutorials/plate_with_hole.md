@@ -73,7 +73,8 @@ The assembler stores the material state at each quadrature point and reuses the 
 
 ## Load and Newton loop
 
-The prescribed displacement is applied in load steps. `stiffness_matrix` is called inside each Newton iteration and `update_states!(assembler)` commits the final state after Newton converges:
+The prescribed displacement is applied in load steps.
+`stiffness_matrix` is called inside each Newton iteration and `update_states!(assembler)` commits the final state after Newton converges:
 
 ```julia
 u = zeros(ndofs(dh))                             # allocate the displacement vector

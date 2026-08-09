@@ -3,8 +3,13 @@
 """
     NeoHooke(E, nu)
 
-Compressible Neo–Hookean hyperelastic material parameterized by Young's modulus `E` and Poisson's ratio `nu`.
+Compressible Neo–Hookean hyperelastic material.
 The constructor stores the equivalent Lamé parameters `μ` (shear modulus) and `λ`.
+
+### Parameters
+
+- `E` – Young's modulus; higher values stiffen the elastic response
+- `nu` – Poisson's ratio; controls lateral contraction under stretch
 
 # References
 

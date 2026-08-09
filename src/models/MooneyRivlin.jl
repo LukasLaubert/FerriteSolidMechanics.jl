@@ -2,8 +2,13 @@
     MooneyRivlin(C10, C01, κ; tangent=:AD)
 
 Compressible Mooney–Rivlin hyperelastic material.
-The isochoric response is linear in the first two modified invariants, with coefficients `C10` and `C01`.
-The bulk modulus `κ` parameterizes the volumetric response.
+The isochoric response is linear in the first two modified invariants.
+
+### Parameters
+
+- `C10` – Coefficient of the first modified invariant
+- `C01` – Coefficient of the second modified invariant
+- `κ` – Bulk modulus; parameterizes the volumetric response
 
 ### Keyword arguments
 
@@ -17,8 +22,7 @@ The bulk modulus `κ` parameterizes the volumetric response.
   <https://doi.org/10.1063/1.1712836>
 - R. S. Rivlin.
   *Large elastic deformations of isotropic materials. IV. further developments of the general theory.*
-  Philosophical Transactions of the Royal Society of London. Series A,
-  Mathematical and Physical Sciences **241**(835) (1948) 379-397.
+  Philosophical Transactions of the Royal Society of London. Series A, Mathematical and Physical Sciences **241**(835) (1948) 379-397.
   <https://doi.org/10.1098/rsta.1948.0024>
 """
 struct MooneyRivlin{Tangent} <: AbstractHyperelastic

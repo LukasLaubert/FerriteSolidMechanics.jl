@@ -18,14 +18,9 @@ The model uses a logarithmic strain measure, namely the Hencky strain $\boldsymb
 ```math
 \boldsymbol{E}_{(0)}^\mathrm{ve} = \frac{1}{2}\ln{\boldsymbol{C}^e} \text{.}
 ```
-Here, $\boldsymbol{C}^e=\left[\boldsymbol{F}^e\right]^T\boldsymbol{F}^e$
-uses the elastic deformation gradient $\boldsymbol{F}^e$, and
-$J^\mathrm{ve}=\det\boldsymbol{F}^e=\sqrt{\det\boldsymbol{C}^e}$ is the
-elastic volume ratio used below. The operators $\operatorname{tr}(\cdot)$
-and $\operatorname{dev}(\cdot)$ denote the trace and deviatoric part.
-Each viscoelastic branch $j \in \{\infty, 1, \dots, n\}$ is assigned a
-bi-logarithmic quadratic potential function for the springs, with branch
-bulk modulus $K_j$ and shear modulus $G_j$, given as
+Here, $\boldsymbol{C}^e=\left[\boldsymbol{F}^e\right]^T\boldsymbol{F}^e$ uses the elastic deformation gradient $\boldsymbol{F}^e$, and $J^\mathrm{ve}=\det\boldsymbol{F}^e=\sqrt{\det\boldsymbol{C}^e}$ is the elastic volume ratio used below.
+The operators $\operatorname{tr}(\cdot)$ and $\operatorname{dev}(\cdot)$ denote the trace and deviatoric part.
+Each viscoelastic branch $j \in \{\infty, 1, \dots, n\}$ is assigned a bi-logarithmic quadratic potential function for the springs, with branch bulk modulus $K_j$ and shear modulus $G_j$, given as
 ```math
 \psi_j(\boldsymbol{E}_{(0)}^\mathrm{ve}) = \frac{K_j}{2}\ln^2J^\mathrm{ve} + G_j [\mathrm{dev}\,\boldsymbol{E}_{(0)}^\mathrm{ve} : \mathrm{dev}\,\boldsymbol{E}_{(0)}^\mathrm{ve}] \text{,}
 ```
@@ -61,18 +56,15 @@ e^{-\Delta t/\tau_{k,j}}B_{j,n}
 \operatorname{tr}(\boldsymbol{E}^{\mathrm{ve}}_{n+1}
 - \boldsymbol{E}^{\mathrm{ve}}_n) \text{.}
 ```
-Here, $\boldsymbol{A}_j$ and $B_j$ denote the mathematical branch
-variables stored as `AA[j]` and `BB[j]`, while
-$\boldsymbol{E}^{\mathrm{ve}}_n$ and
-$\boldsymbol{E}^{\mathrm{ve}}_{n+1}$ are the start-of-step and
-end-of-step logarithmic strains, and $\Delta t$ the time increment.
+Here, $\boldsymbol{A}_j$ and $B_j$ denote the mathematical branch variables stored as `AA[j]` and `BB[j]`, while $\boldsymbol{E}^{\mathrm{ve}}_n$ and $\boldsymbol{E}^{\mathrm{ve}}_{n+1}$ are the start-of-step and end-of-step logarithmic strains, and $\Delta t$ the time increment.
 
 The code evaluates this update first with the trial viscoelastic strain increment for the yield check and, if viscoplastic flow occurs, again with the converged strain increment for the stored state.
 
 In the stress assembly, `AA[j]` enters the deviatoric branch stress as `2 GG[j] AA[j]`, while `BB[j]` enters the volumetric branch stress as `KK[j] BB[j] I` (trace `3 KK[j] BB[j]`).
 
 #### 2. Viscoplastic part
-Beyond the elastic limit, viscoplastic flow is triggered. The model uses a combined stress measure $\boldsymbol{\phi} = \boldsymbol{\tau} - \boldsymbol{b}$, where $\boldsymbol{b}$ is the corotational backstress tensor for kinematic hardening.
+Beyond the elastic limit, viscoplastic flow is triggered.
+The model uses a combined stress measure $\boldsymbol{\phi} = \boldsymbol{\tau} - \boldsymbol{b}$, where $\boldsymbol{b}$ is the corotational backstress tensor for kinematic hardening.
 
 The yield function $\mathcal{F}$ is a generalized Drucker-Prager condition, written as a linear combination of the mean stress $\phi_\mathrm{pr}=\operatorname{tr}(\boldsymbol{\phi})/3$ and the von Mises equivalent stress $\phi_\mathrm{eq}=\sqrt{\frac{3}{2}\operatorname{dev}\boldsymbol{\phi}:\operatorname{dev}\boldsymbol{\phi}}$ as
 ```math
@@ -84,16 +76,13 @@ To enable the accurate prediction of the Poisson effect during plastic deformati
 ```math
 P = [\phi_\mathrm{eq}]^2 + \beta[ \phi_\mathrm{pr}]^2 \text{,}
 ```
-where the parameter $\beta$ is derived from the plastic Poisson's ratio
-$\nu_\mathrm{p}$ as
-$\beta = \frac{9}{2}\frac{1-2\nu_\mathrm{p}}{1+\nu_\mathrm{p}}$. The
-viscoplastic flow rate is then given by
+where the parameter $\beta$ is derived from the plastic Poisson's ratio $\nu_\mathrm{p}$ as $\beta = \frac{9}{2}\frac{1-2\nu_\mathrm{p}}{1+\nu_\mathrm{p}}$.
+The viscoplastic flow rate is then given by
 ```math
 \boldsymbol{D}^\mathrm{vp} = \frac{1}{\eta}\langle\mathcal{F}\rangle^{\frac{1}{p}}\frac{\partial{P}}{\partial\boldsymbol{\tau}}
 ```
-with the viscoplastic coefficient $\eta$, the viscoplastic exponent $p$,
-and the Macaulay bracket $\langle x\rangle=\max(x,0)$. The equivalent
-plastic strain $\gamma$ evolves according to
+with the viscoplastic coefficient $\eta$, the viscoplastic exponent $p$, and the Macaulay bracket $\langle x\rangle=\max(x,0)$.
+The equivalent plastic strain $\gamma$ evolves according to
 ```math
 \dot{\gamma} = \frac{1}{\sqrt{1 + 2 \nu_\mathrm{p}^2}} \sqrt{\boldsymbol{D}^\mathrm{vp} : \boldsymbol{D}^\mathrm{vp}} \text{.}
 ```
@@ -112,12 +101,10 @@ The translated implementation evaluates the compression and tension yield stress
 + h_{t1}\gamma
 + h_{t2}\left[1-e^{-h_{t,\exp}\gamma}\right] \text{.}
 ```
-Here, $\sigma_\mathrm{c}^0$ and $\sigma_\mathrm{t}^0$ are the initial
-compression and tension yield stresses; $h_{c1}$ and $h_{t1}$ are linear
-hardening coefficients, $h_{c2}$ and $h_{t2}$ are saturation magnitudes,
-and $h_{c,\exp}$ and $h_{t,\exp}$ are saturation exponents.
+Here, $\sigma_\mathrm{c}^0$ and $\sigma_\mathrm{t}^0$ are the initial compression and tension yield stresses; $h_{c1}$ and $h_{t1}$ are linear hardening coefficients, $h_{c2}$ and $h_{t2}$ are saturation magnitudes, and $h_{c,\exp}$ and $h_{t,\exp}$ are saturation exponents.
 
-Kinematic hardening follows a polynomial factor in the equivalent plastic strain. In the translated update this factor is evaluated from the start-of-step plastic strain $\gamma_0$ using
+Kinematic hardening follows a polynomial factor in the equivalent plastic strain.
+In the translated update this factor is evaluated from the start-of-step plastic strain $\gamma_0$ using
 
 ```math
 \dot{\boldsymbol{b}}
@@ -125,8 +112,7 @@ Kinematic hardening follows a polynomial factor in the equivalent plastic strain
 \left[h_\mathrm{b0}
 + h_\mathrm{b1}\gamma_0+ h_\mathrm{b2}\gamma_0^2\right]\boldsymbol{D}^\mathrm{vp} \text{.}
 ```
-The coefficients $h_\mathrm{b0}$, $h_\mathrm{b1}$, and $h_\mathrm{b2}$
-are the constant, linear, and quadratic kinematic hardening factors.
+The coefficients $h_\mathrm{b0}$, $h_\mathrm{b1}$, and $h_\mathrm{b2}$ are the constant, linear, and quadratic kinematic hardening factors.
 
 ## Implementation details
 

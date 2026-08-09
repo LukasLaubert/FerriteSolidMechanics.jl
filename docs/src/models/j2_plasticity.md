@@ -21,8 +21,7 @@ Using this notation, the return mapping algorithm is evaluated as follows:
    ```math
    \boldsymbol{\sigma}^{\mathrm{tr}} = \boldsymbol{D}^{\mathrm{e}} : \left[\boldsymbol{\epsilon} - \boldsymbol{\epsilon}^{\mathrm{p}}_n\right], \quad \Phi^{\mathrm{tr}} = \sigma^{\mathrm{tr}}_{\mathrm{eq}} - \left[\sigma_0 + H k_n\right]
    ```
-   with $\boldsymbol{s}^{\mathrm{tr}}=\operatorname{dev}(\boldsymbol{\sigma}^{\mathrm{tr}})$ and $\sigma^{\mathrm{tr}}_{\mathrm{eq}} =
-   \sqrt{\frac{3}{2}\boldsymbol{s}^{\mathrm{tr}}:\boldsymbol{s}^{\mathrm{tr}}}$.
+   with $\boldsymbol{s}^{\mathrm{tr}}=\operatorname{dev}(\boldsymbol{\sigma}^{\mathrm{tr}})$ and $\sigma^{\mathrm{tr}}_{\mathrm{eq}} = \sqrt{\frac{3}{2}\boldsymbol{s}^{\mathrm{tr}}:\boldsymbol{s}^{\mathrm{tr}}}$.
 2. **If $\Phi^{\mathrm{tr}} \le 0$ (elastic step)**
    ```math
    \boldsymbol{\sigma} = \boldsymbol{\sigma}^{\mathrm{tr}}, \quad \boldsymbol{\epsilon}^{\mathrm{p}} = \boldsymbol{\epsilon}^{\mathrm{p}}_n, \quad k = k_n, \quad \boldsymbol{D} = \boldsymbol{D}^{\mathrm{e}}

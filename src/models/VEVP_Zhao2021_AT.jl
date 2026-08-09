@@ -14,30 +14,7 @@ This struct uses the trial `SV_trial{j}` (old `μVₖ`, old `Cᵢₖ_inv`) with 
 `VEVP_Zhao2021_AD` uses the converged `SVⱼ` (new `μVₖ₊₁`, new `Cᵢₖ₊₁`) and obtains the tangent by AD.
 The same `F`, `dt`, parameters, and history state therefore give different PK2 stresses from the two models.
 
-An archived Matrix-storage translation of the CAPRICCIO/Zhao routines is
-preserved as `FerriteSolidMechanics.Experimental.VEVP_Zhao2021_AT_Matlab`.
-
-# References
-
-- W. Zhao, M. Ries, P. Steinmann, S. Pfaller.
-  *A viscoelastic-viscoplastic constitutive model for glassy polymers
-  informed by molecular dynamics simulations.*
-  International Journal of Solids and Structures **226-227** (2021) 111071.
-  <https://doi.org/10.1016/j.ijsolstr.2021.111071>
-- W. Zhao, R. Xiao, S. Pfaller, P. Steinmann.
-  *Modeling strain hardening in glassy polymers based on the
-  microscopic mechanisms revealed by molecular dynamic simulations.*
-  Journal of the Mechanics and Physics of Solids **206** (2026) 106384.
-  <https://doi.org/10.1016/j.jmps.2025.106384>
-
-The implementation-level reference for this code path is part of the
-CAPRICCIO FE–MD coupling tool. This file is a translated/adapted Julia
-implementation with package-specific changes and explicit permission for
-MIT distribution in FerriteSolidMechanics.jl:
-Pfaller, S., Ries, M., Zhao, W., Bauer, C., Weber, F., & Laubert, L.
-*CAPRICCIO - Tool to run concurrent Finite Element-Molecular Dynamics
-Simulations* (Version 2.0.1), Zenodo (2024).
-<https://doi.org/10.5281/zenodo.12606758>
+An archived Matrix-storage translation of the CAPRICCIO/Zhao routines is preserved as `FerriteSolidMechanics.Experimental.VEVP_Zhao2021_AT_Matlab`.
 
 ### Parameters
 `NV` must be at least 2 as branch parameters are interpolated between the branch-1 and branch-N end points.
@@ -58,6 +35,23 @@ Simulations* (Version 2.0.1), Zenodo (2024).
 - `dt_scale` – multiplies `dt` inside the constitutive update so the time step is expressed in the unit used during parameter calibration.
   Default `1.0` leaves `dt` unscaled.
   When the calibration unit and the driver unit differ, set it to the conversion factor: parameters calibrated in seconds with a driver passing `dt` in nanoseconds give `dt_scale = 1e-9`.
+
+# References
+
+- W. Zhao, M. Ries, P. Steinmann, S. Pfaller.
+  *A viscoelastic-viscoplastic constitutive model for glassy polymers informed by molecular dynamics simulations.*
+  International Journal of Solids and Structures **226-227** (2021) 111071.
+  <https://doi.org/10.1016/j.ijsolstr.2021.111071>
+- W. Zhao, R. Xiao, S. Pfaller, P. Steinmann.
+  *Modeling strain hardening in glassy polymers based on the microscopic mechanisms revealed by molecular dynamic simulations.*
+  Journal of the Mechanics and Physics of Solids **206** (2026) 106384.
+  <https://doi.org/10.1016/j.jmps.2025.106384>
+
+The implementation-level reference for this code path is part of the CAPRICCIO FE–MD coupling tool.
+This file is a translated/adapted Julia implementation with package-specific changes and explicit permission for MIT distribution in FerriteSolidMechanics.jl:
+Pfaller, S., Ries, M., Zhao, W., Bauer, C., Weber, F., & Laubert, L.
+*CAPRICCIO - Tool to run concurrent Finite Element-Molecular Dynamics Simulations* (Version 2.0.1), Zenodo (2024).
+<https://doi.org/10.5281/zenodo.12606758>
 """
 struct VEVP_Zhao2021_AT <: AbstractMaterial
     vevp_muE::Float64

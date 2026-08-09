@@ -25,8 +25,7 @@ Softening works through a decrease of the effective yield stress with the maximu
 
 The stress below is written in second Piola-Kirchhoff (PK2) form, using the deformation gradient $\boldsymbol{F}$, the right Cauchy-Green tensor $\boldsymbol{C}=\boldsymbol{F}^{\mathrm{T}}\boldsymbol{F}$, the volume ratio $J=\det\boldsymbol{F}$, and one inelastic right Cauchy-Green tensor $\boldsymbol{C}_{\mathrm{i},j}$ for each module.
 Here, $\mathrm{i}$ labels the inelastic tensor, $j=1,\ldots,N_\mathrm{V}$ labels the inelastic module, and $n$ is the time step index.
-Throughout this page, $\operatorname{dev}(\cdot)$ denotes the deviatoric
-part and $\|\cdot\|_\mathrm{F}$ denotes the Frobenius norm.
+Throughout this page, $\operatorname{dev}(\cdot)$ denotes the deviatoric part and $\|\cdot\|_\mathrm{F}$ denotes the Frobenius norm.
 
 #### 1. Stress evaluation
 
@@ -54,9 +53,7 @@ The module flow is driven by the deviatoric norm of the pushed-forward trial mod
 =
 \boldsymbol{F}\boldsymbol{S}^{\mathrm{tr}}_j\boldsymbol{F}^{\mathrm{T}} \text{.}
 ```
-Here, $\boldsymbol{S}^{\mathrm{tr}}_j$ is the trial PK2 stress
-contribution of inelastic module $j$, and
-$\boldsymbol{\tau}^{\mathrm{tr}}_j$ is its pushed-forward trial stress.
+Here, $\boldsymbol{S}^{\mathrm{tr}}_j$ is the trial PK2 stress contribution of inelastic module $j$, and $\boldsymbol{\tau}^{\mathrm{tr}}_j$ is its pushed-forward trial stress.
 
 The history variable stored as `strain_maxk` is the maximum principal stretch ratio measure of Zhao et al. [1]
 
@@ -66,8 +63,7 @@ v_{\max}(t)
 \max_{0 \le s \le t}
 \left|\frac{\lambda_{\max}(s)}{\lambda_{\min}(s)} - 1 \right| \text{.}
 ```
-Here, $\lambda_{\max}$ and $\lambda_{\min}$ are the largest and smallest
-principal stretches reached at the history time $s$.
+Here, $\lambda_{\max}$ and $\lambda_{\min}$ are the largest and smallest principal stretches reached at the history time $s$.
 
 Using the ramp function $\langle x\rangle = \left[x + |x|\right]/2$, the effective yield stress in module $j$ is
 
@@ -76,8 +72,7 @@ r_{\mathrm{y},j}(v_{\max})
 =
 \left\langle r_{\mathrm{y0},j} - \beta v_{\max} \right\rangle \text{,}
 ```
-with initial module threshold $r_{\mathrm{y0},j}$ and softening
-coefficient $\beta$.
+with initial module threshold $r_{\mathrm{y0},j}$ and softening coefficient $\beta$.
 
 The effective flow measure evaluated by the implementation is
 
@@ -89,8 +84,7 @@ The effective flow measure evaluated by the implementation is
 ```
 
 The constructor arguments `τ̂₁` and `τ̂N` set the endpoint values for the $\hat{\tau}_j$ appearing in the denominator of the power-flow law.
-The endpoint arguments `m₁` and `mN` set the stress exponent $m_j$ for
-each module.
+The endpoint arguments `m₁` and `mN` set the stress exponent $m_j$ for each module.
 The constructor arguments `τcut₁` and `τcutN` set the endpoint values for $r_{\mathrm{y0},j}$ in the effective yield stress $r_{\mathrm{y},j}$.
 Setting `τcut₁ = 0` gives $r_{\mathrm{y0},1}=0$; positive values give the first module an initial yield threshold.
 
@@ -105,8 +99,7 @@ For the stable AD and AT variants, the inelastic tensor is updated over the time
 \frac{\dot{\gamma}_{\mathrm{D},j}}{\|\operatorname{dev}\boldsymbol{\tau}^{\mathrm{tr}}_j\|_\mathrm{F}}
 \mu^{\mathrm{V}}_j \boldsymbol{C}^* \text{,}
 ```
-The superscript $\mathrm{nd}$ marks the intermediate inelastic tensor
-before determinant normalization, while the normalized end-of-step tensor is
+The superscript $\mathrm{nd}$ marks the intermediate inelastic tensor before determinant normalization, while the normalized end-of-step tensor is
 
 ```math
 \boldsymbol{C}_{\mathrm{i},j,n+1}
@@ -129,10 +122,8 @@ In addition to the yield stress softening criterion of Zhao et al. [1], the impl
 + \alpha\left[\mu^{\mathrm{Ve}} - \mu^{\mathrm{V}}_n\right]\dot{\gamma}_{\mathrm{D},1}\Delta t \text{.}
 ```
 
-Here, $\alpha$ controls the evolution rate, $\mu^{\mathrm{Ve}}$ is the
-target total inelastic shear modulus, and $\dot{\gamma}_{\mathrm{D},1}$ is the
-flow measure of the first inelastic module. The updated total
-$\mu^{\mathrm{V}}_{n+1}$ is stored for the next step.
+Here, $\alpha$ controls the evolution rate, $\mu^{\mathrm{Ve}}$ is the target total inelastic shear modulus, and $\dot{\gamma}_{\mathrm{D},1}$ is the flow measure of the first inelastic module.
+The updated total $\mu^{\mathrm{V}}_{n+1}$ is stored for the next step.
 Critically, `VEVP_Zhao2021_AD` redistributes the updated total modulus before final stress assembly, while `VEVP_Zhao2021_AT` follows the analytical-tangent path and evaluates final stress from the trial branch stresses.
 
 ## Implementation details

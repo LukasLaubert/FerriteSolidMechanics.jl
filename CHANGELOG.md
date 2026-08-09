@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- Unified the material model docstrings: every model documents its `Parameters` and `Keyword arguments` before its `References`. The `compute_PK1_3D` and `update_state_from_3D!` extension points moved from the material model API page to the general API page, next to the other material interface hooks.
+
+### Fixed
+
+- Documentation: the wrapper extension points are required of finite-strain materials only, not of every wrapped material; the `AbstractHyperelastic` wrapper fallback derives the stress from the strain energy `Ψ` rather than from `material_response`; the `Ogden` page no longer documents a `tangent` keyword that the constructor does not accept.
+
 ## [0.1.0] - 2026-08-09
 
 ### Added

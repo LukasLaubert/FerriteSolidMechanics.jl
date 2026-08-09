@@ -5,8 +5,12 @@
     ArrudaBoyce(μ, κ, N; tangent=:AT)
 
 Compressible Arruda–Boyce eight-chain hyperelastic material.
-The network shear modulus `μ` and the limiting chain extensibility `N` parameterize the isochoric network response.
-The bulk modulus `κ` parameterizes the volumetric response.
+
+### Parameters
+
+- `μ` – Network shear modulus; scales the network stress contribution
+- `κ` – Bulk modulus; parameterizes the volumetric response
+- `N` – Limiting chain extensibility, the number of Kuhn segments per chain; larger values push locking to higher stretches
 
 ### Keyword arguments
 
@@ -15,8 +19,7 @@ The bulk modulus `κ` parameterizes the volumetric response.
 # References
 
 - E. M. Arruda, M. C. Boyce.
-  *A three-dimensional constitutive model for the large stretch behavior
-  of rubber elastic materials.*
+  *A three-dimensional constitutive model for the large stretch behavior of rubber elastic materials.*
   Journal of the Mechanics and Physics of Solids **41**(2) (1993) 389-412.
   <https://doi.org/10.1016/0022-5096(93)90013-6>
 """
