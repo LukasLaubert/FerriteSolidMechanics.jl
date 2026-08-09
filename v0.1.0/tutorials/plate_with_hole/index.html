@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>2D plate with a hole · FerriteSolidMechanics.jl</title><meta name="title" content="2D plate with a hole · FerriteSolidMechanics.jl"/><meta property="og:title" content="2D plate with a hole · FerriteSolidMechanics.jl"/><meta property="twitter:title" content="2D plate with a hole · FerriteSolidMechanics.jl"/><meta name="description" content="Documentation for FerriteSolidMechanics.jl."/><meta property="og:description" content="Documentation for FerriteSolidMechanics.jl."/><meta property="twitter:description" content="Documentation for FerriteSolidMechanics.jl."/><meta property="og:url" content="https://LukasLaubert.github.io/FerriteSolidMechanics.jl/tutorials/plate_with_hole/"/><meta property="twitter:url" content="https://LukasLaubert.github.io/FerriteSolidMechanics.jl/tutorials/plate_with_hole/"/><link rel="canonical" href="https://LukasLaubert.github.io/FerriteSolidMechanics.jl/tutorials/plate_with_hole/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">FerriteSolidMechanics.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox"/><label class="tocitem" for="menuitem-2"><span class="docs-label">Material models</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../models/">Overview</a></li><li><a class="tocitem" href="../../models/linear_elasticity/">Linear Elasticity</a></li><li><input class="collapse-toggle" id="menuitem-2-3" type="checkbox"/><label class="tocitem" for="menuitem-2-3"><span class="docs-label">Hyperelastic</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../models/neo_hooke/">Neo–Hookean</a></li><li><a class="tocitem" href="../../models/arruda_boyce/">Arruda–Boyce</a></li><li><a class="tocitem" href="../../models/mooney_rivlin/">Mooney–Rivlin</a></li><li><a class="tocitem" href="../../models/ogden/">Ogden</a></li></ul></li><li><a class="tocitem" href="../../models/j2_plasticity/">J2 Plasticity</a></li><li><a class="tocitem" href="../../models/vepd_detrez2010/">VEPD Detrez 2010</a></li><li><a class="tocitem" href="../../models/vevp_zhao2021/">VEVP Zhao 2021</a></li><li><a class="tocitem" href="../../models/vevp_moammm/">VEVP MOAMMM</a></li><li><a class="tocitem" href="../../experimental/">Experimental models</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox" checked/><label class="tocitem" for="menuitem-3"><span class="docs-label">Tutorials</span><i class="docs-chevron"></i></label><ul class="collapsed"><li class="is-active"><a class="tocitem" href>2D plate with a hole</a><ul class="internal"><li><a class="tocitem" href="#Problem-setup"><span>Problem setup</span></a></li><li><a class="tocitem" href="#Grid,-interpolation,-constraints"><span>Grid, interpolation, constraints</span></a></li><li><a class="tocitem" href="#Material"><span>Material</span></a></li><li><a class="tocitem" href="#Assembler"><span>Assembler</span></a></li><li><a class="tocitem" href="#Load-and-Newton-loop"><span>Load and Newton loop</span></a></li><li><a class="tocitem" href="#Postprocessing"><span>Postprocessing</span></a></li><li><a class="tocitem" href="#Swapping-the-material-model"><span>Swapping the material model</span></a></li><li><a class="tocitem" href="#Plain-program"><span>Plain program</span></a></li></ul></li><li><a class="tocitem" href="../cantilever_dma/">DMA cantilever beam</a></li><li><a class="tocitem" href="../adaptive_time_stepping/">Adaptive time stepping</a></li><li><a class="tocitem" href="../mpi_four_point_bending/">MPI four-point bending</a></li></ul></li><li><a class="tocitem" href="../../concepts/">Concepts</a></li><li><a class="tocitem" href="../../loads/">External loads</a></li><li><a class="tocitem" href="../../wrappers/">In-plane wrappers</a></li><li><a class="tocitem" href="../../performance/">Performance and parallel execution</a></li><li><a class="tocitem" href="../../developer_guide/">Developer guide</a></li><li><a class="tocitem" href="../../faq/">FAQ</a></li><li><input class="collapse-toggle" id="menuitem-10" type="checkbox"/><label class="tocitem" for="menuitem-10"><span class="docs-label">API reference</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../api/">General API</a></li><li><a class="tocitem" href="../../api_models/">Material model API</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>2D plate with a hole</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>2D plate with a hole</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/LukasLaubert/FerriteSolidMechanics.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/LukasLaubert/FerriteSolidMechanics.jl/blob/main/docs/src/tutorials/plate_with_hole.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="2D-plate-with-a-hole"><a class="docs-heading-anchor" href="#2D-plate-with-a-hole">2D plate with a hole</a><a id="2D-plate-with-a-hole-1"></a><a class="docs-heading-anchor-permalink" href="#2D-plate-with-a-hole" title="Permalink"></a></h1><p>A plane stress, displacement-controlled quarter plate with a circular hole, solved with a <code>NeoHooke</code> material wrapped by <code>PlaneStress</code>. The runnable script is <code>examples/plate_with_hole_planestress.jl</code> and can be executed from the repository root with:</p><pre><code class="language-sh hljs">julia --project=. examples/plate_with_hole_planestress.jl</code></pre><h2 id="Problem-setup"><a class="docs-heading-anchor" href="#Problem-setup">Problem setup</a><a id="Problem-setup-1"></a><a class="docs-heading-anchor-permalink" href="#Problem-setup" title="Permalink"></a></h2><p>We model a quarter of a square plate with a quarter-circle hole in the corner. The plate is <code>plate_size × plate_size</code>, the hole has radius <code>radius</code>. For symmetry, the bottom and left edges are clamped in their normal direction; the right edge is displaced uniformly outward and the top edge is left free. Consequently, the boundary conditions (BCs) follow as</p><ul><li><code>y = 0</code> (bottom edge): <code>u_y = 0</code> (symmetry),</li><li><code>x = 0</code> (left edge): <code>u_x = 0</code> (symmetry),</li><li><code>x = plate_size</code> (right edge): prescribed <code>u_x = displacement * t</code> (loading).</li></ul><p>A structured polar-like mesh is generated by the helper <code>quarter_plate_with_hole_grid</code>. Figure 1 shows a schematic of the mesh and the applied BCs.</p><p><img src="../../assets/plate_with_hole_setup.svg" alt="Quarter plate with hole setup"/> <strong>Figure 1.</strong> <em>Setup of the quarter plate with hole including boundary conditions.</em></p><h2 id="Grid,-interpolation,-constraints"><a class="docs-heading-anchor" href="#Grid,-interpolation,-constraints">Grid, interpolation, constraints</a><a id="Grid,-interpolation,-constraints-1"></a><a class="docs-heading-anchor-permalink" href="#Grid,-interpolation,-constraints" title="Permalink"></a></h2><p>We set up the grid, displacement field, and boundary conditions with standard Ferrite.jl calls:</p><pre><code class="language-julia hljs">grid = quarter_plate_with_hole_grid(; nr=6, ntheta=16, radius=0.25, plate_size=1.0) # create the quarter-plate mesh (custom function)
+
+interpolation = Lagrange{RefQuadrilateral,1}()^2 # linear displacement shape functions in 2D
+dh = DofHandler(grid)                            # create the dof handler for the grid
+add!(dh, :u, interpolation)                      # add displacement dofs under the field name `:u`
+close!(dh)                                       # finalize the dof numbering
+
+displacement = 0.03                              # final prescribed right-edge displacement
+ch = ConstraintHandler(dh)                       # collect Dirichlet boundary conditions
+add!(ch, Dirichlet(:u, getfacetset(grid, &quot;symmetry_x&quot;), (x, t) -&gt; [0.0], [2]))             # bottom symmetry: u_y = 0
+add!(ch, Dirichlet(:u, getfacetset(grid, &quot;symmetry_y&quot;), (x, t) -&gt; [0.0], [1]))             # left symmetry: u_x = 0
+add!(ch, Dirichlet(:u, getfacetset(grid, &quot;right&quot;),     (x, t) -&gt; [displacement * t], [1])) # right-edge loading: u_x = displacement*t
+close!(ch)                                       # finalize the constraint data</code></pre><p>Each <code>Dirichlet</code> call constrains one displacement direction on one facetset. The right-edge boundary scales linearly with the load parameter <code>t ∈ [0,1]</code>.</p><h2 id="Material"><a class="docs-heading-anchor" href="#Material">Material</a><a id="Material-1"></a><a class="docs-heading-anchor-permalink" href="#Material" title="Permalink"></a></h2><p>A compressible Neo–Hookean material in plane stress is applied using</p><pre><code class="language-julia hljs">E = 100.0
+ν = 0.3
+material = PlaneStress(NeoHooke(E, ν))</code></pre><p>The <code>PlaneStress</code> wrapper turns the 3D <code>NeoHooke</code> into a 2D model by solving for the out-of-plane stretch <code>F̄₃₃</code> at every quadrature point and statically condensing the tangent. It stores the converged out-of-plane stretch so the next local plane stress solve starts from the previous solution. See <a href="../../wrappers/">Wrappers</a> for the math.</p><h2 id="Assembler"><a class="docs-heading-anchor" href="#Assembler">Assembler</a><a id="Assembler-1"></a><a class="docs-heading-anchor-permalink" href="#Assembler" title="Permalink"></a></h2><p><code>create_assembler</code> is the first FerriteSolidMechanics-specific step: it combines the material, dof handler, and constraints into the reusable object used by the solve loop.</p><pre><code class="language-julia hljs">assembler = create_assembler(material, dh, ch; quadrature_order=2)</code></pre><p>The assembler stores the material state at each quadrature point and reuses the arrays needed to assemble the global stiffness matrix and internal force vector.</p><h2 id="Load-and-Newton-loop"><a class="docs-heading-anchor" href="#Load-and-Newton-loop">Load and Newton loop</a><a id="Load-and-Newton-loop-1"></a><a class="docs-heading-anchor-permalink" href="#Load-and-Newton-loop" title="Permalink"></a></h2><p>The prescribed displacement is applied in load steps. <code>stiffness_matrix</code> is called inside each Newton iteration and <code>update_states!(assembler)</code> commits the final state after Newton converges:</p><pre><code class="language-julia hljs">u = zeros(ndofs(dh))                             # allocate the displacement vector
+load_steps = 4                                   # number of equal load increments
+max_newton = 20                                  # maximum Newton iterations per load step
+newton_tol = 1e-8                                # residual tolerance
+
+for step in 1:load_steps                         # advance the prescribed load
+    t = step / load_steps                        # current load factor
+    update!(ch, t)                               # update time-dependent boundary values
+    apply!(u, ch)                                # write prescribed displacements into `u`
+
+    for _ in 1:max_newton                        # Newton iterations for this load step
+        K, r = stiffness_matrix(assembler, u; dt=1.0 / load_steps) # constitutive evaluation &amp; tangent + residual assembly
+        apply_zero!(K, r, ch)                    # apply homogeneous constraints to the correction
+        if norm(r) &lt; newton_tol                  # stop once the residual is small enough
+            break
+        end
+        u .-= K \ r                              # update the displacement vector
+    end
+    update_states!(assembler)                    # commit material states after convergence
+end</code></pre><p>The keyword <code>dt</code> is the time step by which the material model is evaluated in the current load step. For strain rate-dependent models, this is the physical time increment. As <code>NeoHooke</code> is rate-independent, using <code>dt = 1.0 / load_steps</code> is an arbitrary choice.</p><p><code>update_states!(assembler)</code> is called after the load step has converged, which commits the internal material states at each quadrature point. For the stateless <code>NeoHooke</code> used here this is a no-op: <code>NeoHooke</code> carries no internal history, so <code>update_state!</code> on its <code>NoState()</code> does nothing. The call is kept because it is required for history-bearing models such as <code>J2Plasticity</code>, which can be swapped in without changing the loop.</p><h2 id="Postprocessing"><a class="docs-heading-anchor" href="#Postprocessing">Postprocessing</a><a id="Postprocessing-1"></a><a class="docs-heading-anchor-permalink" href="#Postprocessing" title="Permalink"></a></h2><p><code>compute_stresses</code> evaluates stresses from the converged displacement field without advancing material history:</p><pre><code class="language-julia hljs">stresses = compute_stresses(assembler, u)</code></pre><p>The result is indexed by quadrature point and cell position and contains the in-plane Cauchy stress tensors.</p><p>Additionally, this script prints a short summary:</p><pre><code class="language-text hljs">Solved plate with hole
+  cells: 96
+  dofs: 238
+  max displacement: 0.03
+  stress entries: 384</code></pre><p>The final cell-averaged plane stress von Mises stress field from this run is shown in Figure 2. Note that plotting is not covered in this tutorial due to its focus.</p><p><img src="../../assets/plate_with_hole_final.png" alt="Final cell-averaged von Mises stress"/></p><p><strong>Figure 2.</strong> <em>Final cell-averaged von Mises stress field.</em></p><h2 id="Swapping-the-material-model"><a class="docs-heading-anchor" href="#Swapping-the-material-model">Swapping the material model</a><a id="Swapping-the-material-model-1"></a><a class="docs-heading-anchor-permalink" href="#Swapping-the-material-model" title="Permalink"></a></h2><p>The same Newton loop works with other material models. To swap <code>NeoHooke</code> for another model, change only the material constructor; the assembler, boundary conditions, and postprocessing remain identical:</p><pre><code class="language-julia hljs"># Same script, different material:
+material = Hooke2D(E, ν; plane_stress=true) # recommended for linear 2D plane stress
+material = PlaneStress(Hooke(E, ν))         # equivalent wrapper path, but more expensive
+material = PlaneStrain(J2Plasticity(70e3, 0.3, 250.0, 1e3))  # small-strain plasticity
+material = PlaneStress(VEPD_Detrez2010(2000.0, 0.3, 10.0, 5.0, 0.1, 1.0, 1.0, 1.0, 10.0, [100.0, 50.0], [0.1, 1.0]))</code></pre><p>The same solver forwards <code>dt</code> to every material model assigned during assembly. Rate-independent models such as <code>J2Plasticity</code> ignore it; rate-dependent models such as <code>VEPD_Detrez2010</code> use it in the local history update.</p><p>For pure linear 2D elasticity, prefer <code>Hooke2D</code> as it uses the analytical 2D stiffness directly. Use <code>PlaneStrain(Hooke)</code> or <code>PlaneStress(Hooke)</code> only when you want the 3D <code>Hooke</code> model to go through the same 2D wrapper path as other 3D materials, which lack an analytical 2D implementation.</p><h2 id="Plain-program"><a class="docs-heading-anchor" href="#Plain-program">Plain program</a><a id="Plain-program-1"></a><a class="docs-heading-anchor-permalink" href="#Plain-program" title="Permalink"></a></h2><p>The full runnable source is rendered from <code>examples/plate_with_hole_planestress.jl</code>:</p><pre><code class="language-julia hljs">using Ferrite
+using FerriteSolidMechanics
+using LinearAlgebra
+
+&quot;&quot;&quot;
+    quarter_plate_with_hole_grid(; nr=6, ntheta=16, radius=0.25, plate_size=1.0)
+
+Create a structured quadrilateral quarter-plate mesh.
+The inner boundary is a quarter circle with radius `radius`; the outer boundary is the square `[0, plate_size] x [0, plate_size]`.
+&quot;&quot;&quot;
+function quarter_plate_with_hole_grid(; nr::Int=6, ntheta::Int=16, radius::Float64=0.25, plate_size::Float64=1.0)
+    @assert nr &gt;= 1
+    @assert ntheta &gt;= 2
+    @assert 0.0 &lt; radius &lt; plate_size
+
+    nodes = Node{2,Float64}[]
+    node_id(i, j) = 1 + i * (ntheta + 1) + j
+
+    for i in 0:nr
+        s = i / nr
+        for j in 0:ntheta
+            theta = 0.5 * pi * j / ntheta
+            inner = Vec((radius * cos(theta), radius * sin(theta)))
+            outer = if theta &lt;= 0.25 * pi
+                Vec((plate_size, plate_size * tan(theta)))
+            else
+                Vec((plate_size / tan(theta), plate_size))
+            end
+            push!(nodes, Node((1.0 - s) * inner + s * outer))
+        end
+    end
+
+    cells = Quadrilateral[]
+    for i in 0:(nr - 1), j in 0:(ntheta - 1)
+        push!(cells, Quadrilateral((
+            node_id(i, j),
+            node_id(i + 1, j),
+            node_id(i + 1, j + 1),
+            node_id(i, j + 1),
+        )))
+    end
+
+    grid = Grid(cells, nodes)
+    addfacetset!(grid, &quot;symmetry_x&quot;, x -&gt; isapprox(x[2], 0.0; atol=1e-10))
+    addfacetset!(grid, &quot;symmetry_y&quot;, x -&gt; isapprox(x[1], 0.0; atol=1e-10))
+    addfacetset!(grid, &quot;right&quot;, x -&gt; isapprox(x[1], plate_size; atol=1e-10))
+    addfacetset!(grid, &quot;top&quot;, x -&gt; isapprox(x[2], plate_size; atol=1e-10))
+    addfacetset!(grid, &quot;hole&quot;, x -&gt; isapprox(sqrt(x[1]^2 + x[2]^2), radius; atol=1e-8))
+    return grid
+end
+
+&quot;&quot;&quot;
+    run_plate_with_hole(; kwargs...)
+
+Solve a displacement-driven quarter plate with a circular hole using `PlaneStress(NeoHooke(E, nu))`.
+Returns a named tuple with the solution, stresses, grid, dof handler, constraint handler, and assembler.
+&quot;&quot;&quot;
+function run_plate_with_hole(;
+    nr::Int=6,
+    ntheta::Int=16,
+    radius::Float64=0.25,
+    plate_size::Float64=1.0,
+    E::Float64=100.0,
+    nu::Float64=0.3,
+    displacement::Float64=0.03,
+    load_steps::Int=4,
+    max_newton::Int=20,
+    newton_tol::Float64=1e-8,
+)
+    grid = quarter_plate_with_hole_grid(; nr, ntheta, radius, plate_size)
+
+    interpolation = Lagrange{RefQuadrilateral,1}()^2
+    dh = DofHandler(grid)
+    add!(dh, :u, interpolation)
+    close!(dh)
+
+    ch = ConstraintHandler(dh)
+    add!(ch, Dirichlet(:u, getfacetset(grid, &quot;symmetry_x&quot;), (x, t) -&gt; [0.0], [2]))
+    add!(ch, Dirichlet(:u, getfacetset(grid, &quot;symmetry_y&quot;), (x, t) -&gt; [0.0], [1]))
+    add!(ch, Dirichlet(:u, getfacetset(grid, &quot;right&quot;), (x, t) -&gt; [displacement * t], [1]))
+    close!(ch)
+
+    material = PlaneStress(NeoHooke(E, nu))
+    assembler = create_assembler(material, dh, ch; quadrature_order=2)
+
+    u = zeros(ndofs(dh))
+    converged_steps = 0
+    for step in 1:load_steps
+        t = step / load_steps
+        update!(ch, t)
+        apply!(u, ch)
+
+        converged = false
+        for _ in 1:max_newton
+            K, r = stiffness_matrix(assembler, u; dt=1.0 / load_steps)
+            apply_zero!(K, r, ch)
+            if norm(r) &lt; newton_tol
+                converged = true
+                break
+            end
+            u .-= K \ r
+        end
+        converged || error(&quot;Newton iteration did not converge at load step $step&quot;)
+        update_states!(assembler)
+        converged_steps += 1
+    end
+
+    stresses = compute_stresses(assembler, u)
+    return (
+        u=u,
+        stresses=stresses,
+        grid=grid,
+        dh=dh,
+        ch=ch,
+        assembler=assembler,
+        converged_steps=converged_steps,
+    )
+end
+
+if abspath(PROGRAM_FILE) == @__FILE__
+    result = run_plate_with_hole()
+    println(&quot;Solved plate with hole&quot;)
+    println(&quot;  cells: $(getncells(result.grid))&quot;)
+    println(&quot;  dofs: $(ndofs(result.dh))&quot;)
+    println(&quot;  max displacement: $(maximum(abs, result.u))&quot;)
+    println(&quot;  stress entries: $(length(result.stresses))&quot;)
+end
+</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../experimental/">« Experimental models</a><a class="docs-footer-nextpage" href="../cantilever_dma/">DMA cantilever beam »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Sunday 9 August 2026 02:00">Sunday 9 August 2026</span>. Using Julia version 1.12.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
